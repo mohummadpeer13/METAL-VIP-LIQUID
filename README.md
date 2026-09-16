@@ -64,6 +64,16 @@ Dans le dossier du projet, exécutez la commande suivante :
 ```bash
 docker-compose up --build
 ```
+---
+
+## 📁 Structure
+
+* core/ — logique principale du jeu
+* lwjgl3/ — lancement du jeu sur desktop
+* assets/ — ressources du jeu
+* build.gradle — configuration Gradle
+
+---
 
 ## 🛠️ Développement
 
@@ -75,8 +85,6 @@ docker-compose up --build
 4. Exécutez la classe `Main` ou utilisez la commande suivante :
 
 ```bash
-./gradlew run
-or
 ./gradlew lwjgl3:run
 ```
 
