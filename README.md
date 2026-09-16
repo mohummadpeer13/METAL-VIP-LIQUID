@@ -47,7 +47,7 @@ Assurez-vous d’avoir les logiciels suivants installés :
 Clonez le dépôt sur votre machine :
 
 ```bash
-git clone https://github.com/mohummadpeer13/epi-2Dgame-java-libgdx.git
+git clone https://github.com/mohummadpeer13/METAL-VIP-LIQUID.git
 ```
 
 ## 🐳 Exécution avec Docker
@@ -112,5 +112,5 @@ Par exemple : java -jar Metal_Vip_Liquid-1.0.0.jar
 ## 📚 Javadoc
 
 Pour une documentation détaillée des classes et des méthodes du projet, consultez la Javadoc générée pour **Metal Vip Liquid** ici :  
-🔗 [Metal Vip Liquid Javadoc](https://mohummadpeer.github.io/Metal_Vip_Liquid_Javadoc/)
+🔗 [Metal Vip Liquid Javadoc](https://mohummadpeer13.github.io/METAL-VIP-LIQUID-JAVADOC/)
 
