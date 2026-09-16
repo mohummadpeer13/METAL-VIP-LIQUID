@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Inventory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Inventory.java</span></div><h1>Inventory.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import java.util.ArrayList;
+
+/**
+ * Represents an inventory containing a list of weapons.
+ * The inventory allows adding, removing, and accessing weapons.
+ * It also keeps track of the total number of weapons in the inventory.
+ * &lt;p&gt;
+ * The inventory is managed through an {@link ArrayList} of {@link Weapon} objects.
+ * &lt;/p&gt;
+ */
+public class Inventory {
+
+    /**
+     * List of weapons contained in the inventory.
+     * This list stores all weapons currently in the inventory.
+     * It is an {@link ArrayList}, where each element is a {@link Weapon} object.
+     */
+    private ArrayList&lt;Weapon&gt; weapons;
+
+    /**
+     * Constructs a new empty inventory.
+     * &lt;p&gt;
+     * Initializes an empty list of weapons, ready to store {@link Weapon} objects.
+     * &lt;/p&gt;
+     */
+<span class="fc" id="L28">    public Inventory() {</span>
+<span class="fc" id="L29">        weapons = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L30">    }</span>
+
+    /**
+     * Adds a weapon to the inventory.
+     * &lt;p&gt;
+     * This method allows you to add a weapon to the inventory list.
+     * &lt;/p&gt;
+     *
+     * @param weapon The weapon to be added to the inventory.
+     */
+    public void addWeapon(Weapon weapon) {
+<span class="nc" id="L41">        weapons.add(weapon);</span>
+<span class="nc" id="L42">        System.out.println(weapon.getName() + &quot; has been added to the inventory.&quot;);</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Retrieves a weapon from the inventory by its index.
+     * &lt;p&gt;
+     * This method allows you to access a specific weapon in the inventory using its index.
+     * &lt;/p&gt;
+     *
+     * @param index The index of the weapon to retrieve.
+     * @return The weapon at the specified index, or {@code null} if the index is invalid
+     *         (out of bounds of the list).
+     */
+    public Weapon getWeapon(int index) {
+<span class="nc bnc" id="L56" title="All 4 branches missed.">        if (index &gt;= 0 &amp;&amp; index &lt; weapons.size()) {</span>
+<span class="nc" id="L57">            return weapons.get(index);</span>
+        }
+<span class="nc" id="L59">        return null;</span>
+    }
+
+
+    /**
+     * Retrieves the full list of weapons currently in the inventory.
+     * &lt;p&gt;
+     * This method returns the complete list of weapons in the inventory.
+     * &lt;/p&gt;
+     *
+     * @return An {@link ArrayList} of {@link Weapon} objects representing all weapons in the inventory.
+     */
+    public ArrayList&lt;Weapon&gt; getWeapons() {
+<span class="nc" id="L72">        return weapons;</span>
+    }
+
+    /**
+     * Removes a weapon from the inventory by its index.
+     * &lt;p&gt;
+     * This method allows you to remove a weapon from the inventory and prints a message
+     * confirming the removal of the weapon.
+     * &lt;/p&gt;
+     *
+     * @param index The index of the weapon to be removed.
+     */
+    public void removeWeapon(int index) {
+<span class="nc bnc" id="L85" title="All 4 branches missed.">        if (index &gt;= 0 &amp;&amp; index &lt; weapons.size()) {</span>
+<span class="nc" id="L86">            System.out.println(weapons.get(index).getName() + &quot; has been removed from the inventory.&quot;);</span>
+<span class="nc" id="L87">            weapons.remove(index);</span>
+        }
+<span class="nc" id="L89">    }</span>
+
+    /**
+     * Retrieves the number of weapons in the inventory.
+     * &lt;p&gt;
+     * This method returns the total number of weapons stored in the inventory.
+     * &lt;/p&gt;
+     *
+     * @return The total number of weapons in the inventory.
+     */
+    public int getWeaponCount() {
+<span class="nc" id="L100">        return weapons.size();</span>
+    }
+
+    /**
+     * Checks whether the inventory contains a specific weapon.
+     * &lt;p&gt;
+     * This method checks if the inventory contains a given weapon.
+     * &lt;/p&gt;
+     * &lt;p&gt;
+     * Currently, this method always returns {@code true}, as the actual logic for checking
+     * the presence of a weapon is not implemented. This method could be extended to
+     * return a result based on the weapon provided.
+     * &lt;/p&gt;
+     *
+     * @param weapon The weapon to check for in the inventory.
+     * @return {@code true} if the inventory contains the specified weapon.
+     *         (Currently, the logic always returns {@code true}, but it can be extended in future implementations.)
+     */
+    public boolean hasWeapon(Weapon weapon) {
+<span class="nc" id="L119">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

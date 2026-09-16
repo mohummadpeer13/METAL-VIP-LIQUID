@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CharacterTextureManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">CharacterTextureManager.java</span></div><h1>CharacterTextureManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+/**
+ * The manager responsible for handling character textures and animations.
+ * This class loads sprite sheets for the character's running and idle animations,
+ * splits them into individual frames, and creates corresponding {@link Animation} objects.
+ */
+public class CharacterTextureManager {
+
+    /**
+     * The animation for the running state of the character.
+     * It is created from a sprite sheet containing running frames.
+     */
+    private Animation&lt;TextureRegion&gt; runAnimation;
+
+    /**
+     * The animation for the idle state of the character.
+     * It is created from a sprite sheet containing idle frames.
+     */
+    private Animation&lt;TextureRegion&gt; idleAnimation;
+
+    /**
+     * The texture for the running animation (sprite sheet).
+     */
+    private Texture runSheet;
+
+    /**
+     * The texture for the idle animation (sprite sheet).
+     */
+    private Texture idleSheet;
+
+
+    /**
+     * Constructor to initialize the {@link CharacterTextureManager} by loading sprite sheets
+     * for the character's running and idle animations. The sprite sheets are split into frames,
+     * and animations are created from those frames.
+     *
+     * @param texturePathRun The path to the sprite sheet for the running animation.
+     * @param texturePathIdle The path to the sprite sheet for the idle animation.
+     * @param nbOfFrames The number of frames in each animation (both running and idle).
+     */
+<span class="nc" id="L47">    public CharacterTextureManager(String texturePathRun, String texturePathIdle, int nbOfFrames) {</span>
+
+        // Load the running texture (sprite sheet)
+<span class="nc" id="L50">        runSheet = new Texture(Gdx.files.internal(texturePathRun));</span>
+<span class="nc" id="L51">        idleSheet = new Texture(Gdx.files.internal(texturePathIdle));</span>
+
+        // Split the sprite sheets into frames
+<span class="nc" id="L54">        TextureRegion[][] tmpFrames = TextureRegion.split(runSheet, runSheet.getWidth() / nbOfFrames, runSheet.getHeight());</span>
+<span class="nc" id="L55">        TextureRegion[][] tmpIdleFrames = TextureRegion.split(idleSheet, idleSheet.getWidth() / nbOfFrames, idleSheet.getHeight());</span>
+
+        // Create arrays to hold individual frames
+<span class="nc" id="L58">        TextureRegion[] runFrames = new TextureRegion[nbOfFrames];</span>
+<span class="nc" id="L59">        TextureRegion[] idleFrames = new TextureRegion[nbOfFrames];</span>
+
+        // Populate the frames arrays with frames from the sprite sheets
+<span class="nc" id="L62">        int index = 0;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        for (int i = 0; i &lt; nbOfFrames; i++) {</span>
+<span class="nc" id="L64">            runFrames[i] = tmpFrames[0][i];</span>
+<span class="nc" id="L65">            idleFrames[i] = tmpIdleFrames[0][i];</span>
+        }
+
+        // Create the running and idle animations with a frame duration of 0.10 seconds
+<span class="nc" id="L69">        runAnimation = new Animation&lt;TextureRegion&gt;(0.10f, runFrames);</span>
+<span class="nc" id="L70">        idleAnimation = new Animation&lt;TextureRegion&gt;(0.10f, idleFrames);</span>
+
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Returns the running animation for the character.
+     *
+     * @return The {@link Animation} representing the character's running animation.
+     */
+    public Animation&lt;TextureRegion&gt; getRunAnimation() {
+<span class="nc" id="L80">        return runAnimation;</span>
+    }
+
+    /**
+     * Returns the idle animation for the character.
+     *
+     * @return The {@link Animation} representing the character's idle animation.
+     */
+    public Animation&lt;TextureRegion&gt; getIdleAnimation() {
+<span class="nc" id="L89">        return idleAnimation;</span>
+    }
+
+    /**
+     * Disposes of the resources used by the texture sheets.
+     * This method should be called when the textures are no longer needed to free up memory.
+     */
+    public void dispose() {
+<span class="nc" id="L97">        runSheet.dispose();</span>
+<span class="nc" id="L98">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

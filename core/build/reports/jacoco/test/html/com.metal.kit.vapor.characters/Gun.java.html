@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gun.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Gun.java</span></div><h1>Gun.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+
+/**
+ * Represents a gun-type weapon (such as a pistol, rifle, etc.) in the game.
+ * The {@link Gun} class extends {@link Weapon} and represents a weapon with a method to be used.
+ * The {@link Gun#use()} method is currently defined but needs to be implemented to perform
+ * specific actions when the weapon is used (e.g., firing a projectile).
+ */
+public class Gun  extends Weapon{
+
+    /** The sound played when the gun is fired */
+    private Sound shootSound;
+
+    /**
+     * Constructs a new {@link Gun} object.
+     *
+     * @param name The name of the weapon (e.g., &quot;Pistol&quot;, &quot;Rifle&quot;).
+     * @param texture The texture that represents the appearance of the weapon.
+     * @param x The X position of the weapon in the game world.
+     * @param y The Y position of the weapon in the game world.
+     * @param damage The damage dealt by the weapon when it is used.
+     * @param shootSound The path to the sound file that plays when the gun is fired.
+     */
+    public Gun(String name, Texture texture, float x, float y, int damage, String shootSound) {
+<span class="nc" id="L29">        super(name, texture, x, y, damage);</span>
+<span class="nc" id="L30">        this.shootSound = Gdx.audio.newSound(Gdx.files.internal(shootSound));;</span>
+<span class="nc" id="L31">    }</span>
+
+    /**
+     * Disposes of the resources used by the gun, including its texture and sound.
+     * &lt;p&gt;
+     * This method is called when the weapon is no longer in use to release the allocated memory.
+     * &lt;/p&gt;
+     */
+    @Override
+    public void dispose() {
+<span class="nc" id="L41">        super.dispose();</span>
+
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (shootSound != null) {</span>
+<span class="nc" id="L44">            shootSound.dispose();</span>
+<span class="nc" id="L45">            shootSound = null;</span>
+        }
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * Uses the gun, triggering the firing action and playing the associated sound.
+     * &lt;p&gt;
+     * In this implementation, using the gun consists solely of playing the shoot sound.
+     * This method can be extended to include additional effects such as firing a projectile,
+     * animating the gun, or inflicting damage on enemies.
+     * &lt;/p&gt;
+     */
+    @Override
+    public void use() {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (shootSound != null) {</span>
+<span class="nc" id="L60">            shootSound.play();</span>
+        }
+<span class="nc" id="L62">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

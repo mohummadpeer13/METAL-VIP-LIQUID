@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnemyManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">EnemyManager.java</span></div><h1>EnemyManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+
+import com.badlogic.gdx.utils.Array;
+import com.metal.kit.vapor.characters.Cctv;
+import com.metal.kit.vapor.characters.Dog;
+import com.metal.kit.vapor.characters.Enemy;
+import com.metal.kit.vapor.characters.Guard;
+
+/**
+ * The enemy manager that handles the management of enemies in the game.
+ * This class is responsible for creating, updating, and managing the resources of the enemies.
+ * It stores the enemies in a list and allows access to them during gameplay.
+ *
+ * The `EnemyManager` manages different types of enemies including guards, CCTV cameras, dogs, and tower guards.
+ */
+public class EnemyManager {
+
+    /**
+     * List of active enemies in the game.
+     * This list stores all the currently active enemies.
+     */
+    private Array&lt;Enemy&gt; enemies;
+
+    /**
+     * Constructor for the EnemyManager class.
+     * Initializes the enemy list and calls the method to create and position enemies in the game.
+     */
+<span class="nc" id="L29">    public EnemyManager() {</span>
+<span class="nc" id="L30">        this.enemies = new Array&lt;&gt;();</span>
+<span class="nc" id="L31">        createEnemy();</span>
+<span class="nc" id="L32">    }</span>
+
+    /**
+     * Creates and positions various types of enemies (guards, CCTV cameras, dogs, tower guards) in the game.
+     * This method initializes multiple enemies with their positions, textures, and behaviors.
+     */
+    private void createEnemy() {
+
+        // GUARDS
+<span class="nc" id="L41">        Enemy guard1 = new Guard(&quot;guard1&quot;, 10, 750, 1, 5, GameConfigManager.GUARD_SPEED, 10, 750, 800, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L42">        guard1.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L43">        enemies.add(guard1);</span>
+
+<span class="nc" id="L45">        Enemy guard2 = new Guard(&quot;guard2&quot;, 900, 650, 1, 5, GameConfigManager.GUARD_SPEED, 900, 650, 800, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L46">        guard2.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L47">        enemies.add(guard2);</span>
+
+<span class="nc" id="L49">        Enemy guard3 = new Guard(&quot;guard3&quot;, 1219, 275, 1, 5, GameConfigManager.GUARD_SPEED, 1219, 275, 600, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L50">        guard3.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L51">        enemies.add(guard3);</span>
+
+<span class="nc" id="L53">        Enemy guard4 = new Guard(&quot;guard4&quot;, 545, 0, 1, 5, GameConfigManager.GUARD_SPEED, 545, 0, 900, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L54">        guard4.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L55">        enemies.add(guard4);</span>
+
+<span class="nc" id="L57">        Enemy guard5 = new Guard(&quot;guard5&quot;, 1427, 472, 1, 5, GameConfigManager.GUARD_SPEED, 1427, 472, 470, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L58">        guard5.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L59">        enemies.add(guard5);</span>
+
+<span class="nc" id="L61">        Enemy guard6 = new Guard(&quot;guard6&quot;, 72, 472, 1, 5, GameConfigManager.GUARD_SPEED, 72, 472, 520, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L62">        guard6.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L63">        enemies.add(guard6);</span>
+
+<span class="nc" id="L65">        Enemy guard7 = new Guard(&quot;guard7&quot;, 1169, 222, 1, 5, GameConfigManager.GUARD_SPEED, 1169, 222, 300, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L66">        guard7.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L67">        enemies.add(guard7);</span>
+
+<span class="nc" id="L69">        Enemy guard8 = new Guard(&quot;guard8&quot;, 1404, 889, 1, 5, GameConfigManager.GUARD_SPEED, 1404, 889, 450, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L70">        guard8.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L71">        enemies.add(guard8);</span>
+
+<span class="nc" id="L73">        Enemy guard9 = new Guard(&quot;guard9&quot;, 42, 1539, 1, 5, GameConfigManager.GUARD_SPEED, 42, 1539, 300, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L74">        guard9.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L75">        enemies.add(guard9);</span>
+
+<span class="nc" id="L77">        Enemy guard10 = new Guard(&quot;guard10&quot;, 1043, 1619, 1, 5, GameConfigManager.GUARD_SPEED, 1043, 1619, 300, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L78">        guard10.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L79">        enemies.add(guard10);</span>
+
+<span class="nc" id="L81">        Enemy guard11 = new Guard(&quot;guard11&quot;, 72, 1130, 1, 5, GameConfigManager.GUARD_SPEED, 72, 1130, 700, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L82">        guard11.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L83">        enemies.add(guard11);</span>
+
+<span class="nc" id="L85">        Enemy guard12 = new Guard(&quot;guard12&quot;, 120, 1758, 1, 5, GameConfigManager.GUARD_SPEED, 120, 1758, 800, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L86">        guard12.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L87">        enemies.add(guard12);</span>
+
+<span class="nc" id="L89">        Enemy guard13 = new Guard(&quot;guard13&quot;, 1050, 1758, 1, 5, GameConfigManager.GUARD_SPEED, 1050, 1758, 800, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L90">        guard13.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L91">        enemies.add(guard13);</span>
+
+<span class="nc" id="L93">        Enemy guard14 = new Guard(&quot;guard14&quot;, 100, 1840, 1, 5, GameConfigManager.GUARD_SPEED, 100, 1840, 1600, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L94">        guard14.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L95">        enemies.add(guard14);</span>
+
+<span class="nc" id="L97">        Enemy guard15 = new Guard(&quot;guard15&quot;, 890, 884, 1, 5, GameConfigManager.GUARD_SPEED, 890, 884, 500, 100, 200,150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L98">        guard15.initTexture(GameConfigManager.GUARD_TEXTURE_IDLE, GameConfigManager.GUARD_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L99">        enemies.add(guard15);</span>
+
+        // CCTVs
+        // -100 sens gauche ou 10 a droite
+<span class="nc" id="L103">        Enemy cctv1 = new Cctv(&quot;cctv1&quot;, 250, 270, 1, 0, GameConfigManager.CCTV_SPEED, 250, 270, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_LEFT);</span>
+<span class="nc" id="L104">        cctv1.initTexture(GameConfigManager.CCTV_TEXTURE_LEFT, GameConfigManager.CCTV_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L105">        enemies.add(cctv1);</span>
+
+<span class="nc" id="L107">        Enemy cctv2 = new Cctv(&quot;cctv2&quot;, 820, 270, 1, 0, GameConfigManager.CCTV_SPEED, 250, 570, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L108">        cctv2.initTexture(GameConfigManager.CCTV_TEXTURE_RIGHT, GameConfigManager.CCTV_TEXTURE_RIGHT, 6);</span>
+<span class="nc" id="L109">        enemies.add(cctv2);</span>
+
+<span class="nc" id="L111">        Enemy cctv3 = new Cctv(&quot;cctv3&quot;, 566, 399, 1, 0, GameConfigManager.CCTV_SPEED, 576, 409, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L112">        cctv3.initTexture(GameConfigManager.CCTV_TEXTURE_RIGHT, GameConfigManager.CCTV_TEXTURE_RIGHT, 6);</span>
+<span class="nc" id="L113">        enemies.add(cctv3);</span>
+
+<span class="nc" id="L115">        Enemy cctv4 = new Cctv(&quot;cctv4&quot;, 879, 399, 1, 0, GameConfigManager.CCTV_SPEED, 859, 409, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_LEFT);</span>
+<span class="nc" id="L116">        cctv4.initTexture(GameConfigManager.CCTV_TEXTURE_LEFT, GameConfigManager.CCTV_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L117">        enemies.add(cctv4);</span>
+
+<span class="nc" id="L119">        Enemy cctv5 = new Cctv(&quot;cctv5&quot;, 853, 1456, 1, 0, GameConfigManager.CCTV_SPEED, 833, 1476, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_LEFT);</span>
+<span class="nc" id="L120">        cctv5.initTexture(GameConfigManager.CCTV_TEXTURE_LEFT, GameConfigManager.CCTV_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L121">        enemies.add(cctv5);</span>
+
+<span class="nc" id="L123">        Enemy cctv6 = new Cctv(&quot;cctv6&quot;, 1717, 1016, 1, 0, GameConfigManager.CCTV_SPEED, 1727, 1026, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L124">        cctv6.initTexture(GameConfigManager.CCTV_TEXTURE_RIGHT, GameConfigManager.CCTV_TEXTURE_RIGHT, 6);</span>
+<span class="nc" id="L125">        enemies.add(cctv6);</span>
+
+<span class="nc" id="L127">        Enemy cctv7 = new Cctv(&quot;cctv2&quot;, 1332, 400, 1, 0, GameConfigManager.CCTV_SPEED, 1332, 400, 100, 100, 100, 150,GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L128">        cctv7.initTexture(GameConfigManager.CCTV_TEXTURE_RIGHT, GameConfigManager.CCTV_TEXTURE_RIGHT, 6);</span>
+<span class="nc" id="L129">        enemies.add(cctv7);</span>
+
+
+        // DOGS
+<span class="nc" id="L133">        Enemy dog1 = new Dog(&quot;dog1&quot;, 950, 756, 1, 2, GameConfigManager.DOG_SPEED, 900, 650, 800, 100, 200, 150, GameConfigManager.CCTV_SENS_LEFT);</span>
+<span class="nc" id="L134">        dog1.initTexture(GameConfigManager.DOG_TEXTURE_IDLE, GameConfigManager.DOG_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L135">        enemies.add(dog1);</span>
+
+<span class="nc" id="L137">        Enemy dog2 = new Dog(&quot;dog2&quot;, 1417, 750, 1, 2, GameConfigManager.DOG_SPEED, 1417, 750, 490, 100, 200, 150, GameConfigManager.CCTV_SENS_LEFT);</span>
+<span class="nc" id="L138">        dog2.initTexture(GameConfigManager.DOG_TEXTURE_IDLE, GameConfigManager.DOG_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L139">        enemies.add(dog2);</span>
+
+<span class="nc" id="L141">        Enemy dog3 = new Dog(&quot;dog3&quot;, 310, 90, 1, 2, GameConfigManager.DOG_SPEED, 310, 90, 550, 100, 200, 150, GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L142">        dog3.initTexture(GameConfigManager.DOG_TEXTURE_IDLE, GameConfigManager.DOG_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L143">        enemies.add(dog3);</span>
+
+<span class="nc" id="L145">        Enemy dog4 = new Dog(&quot;dog4&quot;, 1073, 1619, 1, 2, GameConfigManager.DOG_SPEED, 1073, 1619, 280, 100, 200, 150, GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L146">        dog4.initTexture(GameConfigManager.DOG_TEXTURE_IDLE, GameConfigManager.DOG_TEXTURE_RUNNING, 6);</span>
+<span class="nc" id="L147">        enemies.add(dog4);</span>
+
+
+
+        // TOWER GUARDS
+<span class="nc" id="L152">        Enemy towerGuard1 = new Cctv(&quot;towerGuard1&quot;, 525, 433, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 100, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L153">        towerGuard1.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L154">        enemies.add(towerGuard1);</span>
+
+<span class="nc" id="L156">        Enemy towerGuard2 = new Cctv(&quot;towerGuard2&quot;, 915, 433, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_RIGHT);</span>
+<span class="nc" id="L157">        towerGuard2.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_RIGHT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L158">        enemies.add(towerGuard2);</span>
+
+<span class="nc" id="L160">        Enemy towerGuard3 = new Cctv(&quot;towerGuard3&quot;, 1293, 433, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L161">        towerGuard3.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L162">        enemies.add(towerGuard3);</span>
+
+<span class="nc" id="L164">        Enemy towerGuard4 = new Cctv(&quot;towerGuard4&quot;, 883, 1489, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.CCTV_SENS_RIGHT);</span>
+<span class="nc" id="L165">        towerGuard4.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_RIGHT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L166">        enemies.add(towerGuard4);</span>
+
+<span class="nc" id="L168">        Enemy towerGuard5 = new Cctv(&quot;towerGuard5&quot;, 1806, 113, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L169">        towerGuard5.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L170">        enemies.add(towerGuard5);</span>
+
+<span class="nc" id="L172">        Enemy towerGuard6 = new Cctv(&quot;towerGuard6&quot;, 1678, 1041, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L173">        towerGuard6.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L174">        enemies.add(towerGuard6);</span>
+
+<span class="nc" id="L176">        Enemy towerGuard7 = new Cctv(&quot;towerGuard7&quot;, 1837, 1586, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L177">        towerGuard7.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L178">        enemies.add(towerGuard7);</span>
+
+<span class="nc" id="L180">        Enemy towerGuard8 = new Cctv(&quot;towerGuard8&quot;, 880, 817, 1, 1, GameConfigManager.CCTV_SPEED, 10, 750, 800, 100, 200, 150, GameConfigManager.TOWER_GUARD_SENS_LEFT);</span>
+<span class="nc" id="L181">        towerGuard8.initTexture(GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, GameConfigManager.TOWER_GUARD_TEXTURE_LEFT, 6);</span>
+<span class="nc" id="L182">        enemies.add(towerGuard8);</span>
+
+<span class="nc" id="L184">    }</span>
+
+    /**
+     * Retrieves the list of all created enemies.
+     *
+     * @return The list of active enemies in the game.
+     */
+    public Array&lt;Enemy&gt; getEnemies() {
+<span class="nc" id="L192">        return enemies;</span>
+    }
+
+    /**
+     * Releases the resources allocated for the enemies.
+     * This method should be called when the enemies are no longer needed, to clean up resources.
+     */
+    public void dispose() {
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        for (Enemy enemy : enemies) {</span>
+<span class="nc" id="L201">            enemy.dispose();</span>
+<span class="nc" id="L202">        }</span>
+<span class="nc" id="L203">        enemies.clear();</span>
+<span class="nc" id="L204">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Character.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Character.java</span></div><h1>Character.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.metal.kit.vapor.Interfaces.Playable;
+
+/**
+ * Represents a character in the game. This abstract class provides basic functionalities
+ * such as managing health points, attack power, and texture handling. It is intended to be extended
+ * by specific character classes (e.g., the player or enemy).
+ * &lt;p&gt;
+ * This class implements the {@link Playable} interface, which defines movement and attack methods.
+ * Movement and attack behaviors are left to the subclasses because each character type can have
+ * different behavior.
+ * &lt;/p&gt;
+ */
+public abstract class Character implements Playable {
+    /** The character's name */
+    public String name;
+
+    /** The character's position on the X-axis */
+    public float x, y;
+
+    /** The character's health points */
+    public int hp;
+
+    /** The character's attack power */
+    public int attackPower;
+
+    /** The character's movement speed */
+    public float speed;
+
+    /** The character's idle texture */
+    public Texture idleTexture;
+
+    /** The character's running texture */
+    public Texture runningTexture;
+
+    /** The sprite used to render the character */
+    public Sprite sprite;
+
+    /** The running animation for the character */
+    public Animation&lt;TextureRegion&gt; runAnimation;
+
+    /** The idle animation for the character */
+    public Animation&lt;TextureRegion&gt; idleAnimation;
+
+    /** The time elapsed since the last frame update (used for animations) */
+<span class="fc" id="L57">    public float stateTime = 0f;</span>
+
+    /** Indicates if the character is running */
+<span class="fc" id="L60">    public boolean isRunning = false;</span>
+
+    /**
+     * Constructs a character with basic parameters.
+     *
+     * @param name The character's name.
+     * @param x The initial X position of the character.
+     * @param y The initial Y position of the character.
+     * @param hp The initial health points of the character.
+     * @param attackPower The attack power of the character.
+     * @param speed The movement speed of the character.
+     */
+<span class="fc" id="L72">    public Character(String name, float x, float y, int hp, int attackPower, float speed) {</span>
+<span class="fc" id="L73">        this.name = name;</span>
+<span class="fc" id="L74">        this.x = x;</span>
+<span class="fc" id="L75">        this.y = y;</span>
+<span class="fc" id="L76">        this.hp = hp;</span>
+<span class="fc" id="L77">        this.attackPower = attackPower;</span>
+<span class="fc" id="L78">        this.speed = speed;</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Initializes the textures and animations for the character, using paths to the texture files.
+     * This method sets up both the idle and running animations.
+     *
+     * @param idleTexturePath The path to the idle texture.
+     * @param runningTexturePath The path to the running texture.
+     * @param nbOfFrames The number of frames for each animation (idle and running).
+     */
+    public void initTexture(String idleTexturePath, String runningTexturePath, int nbOfFrames) {
+<span class="nc" id="L90">        stateTime = 0f;</span>
+<span class="nc" id="L91">        idleTexture = new Texture(idleTexturePath);</span>
+<span class="nc" id="L92">        runningTexture = new Texture(runningTexturePath);</span>
+
+        // Load the idle animation frames
+<span class="nc" id="L95">        TextureRegion[] idleFrames = new TextureRegion[nbOfFrames];</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        for (int i = 0; i &lt; nbOfFrames; i++) {</span>
+<span class="nc" id="L97">            idleFrames[i] = new TextureRegion(idleTexture, i * 32, 0, 32, 37);</span>
+        }
+<span class="nc" id="L99">        idleAnimation = new Animation&lt;TextureRegion&gt;(0.1f, idleFrames);</span>
+
+        // Load the running animation frames
+<span class="nc" id="L102">        TextureRegion[] runningFrames = new TextureRegion[nbOfFrames];</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int i = 0; i &lt; nbOfFrames; i++) {</span>
+<span class="nc" id="L104">            runningFrames[i] = new TextureRegion(runningTexture, i * 32, 0, 32, 37);</span>
+        }
+<span class="nc" id="L106">        runAnimation = new Animation&lt;TextureRegion&gt;(0.1f, runningFrames);</span>
+
+<span class="nc" id="L108">        sprite = new Sprite(idleAnimation.getKeyFrame(stateTime, true));</span>
+<span class="nc" id="L109">        sprite.setPosition(x, y);</span>
+<span class="nc" id="L110">    }</span>
+
+    /**
+     * Moves the character based on delta coordinates. The movement logic is left to subclasses.
+     *
+     * @param delta The distance to move (time-based).
+     * @param map The game map (used for collision detection and terrain).
+     */
+    @Override
+    public void move(float delta, TiledMap map) {
+        // Movement logic should be implemented by subclasses.
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Performs an attack on enemies. The method is left to subclasses to define specific attack behavior.
+     *
+     * @param enemies A list of enemies that can be attacked.
+     * @param shootSound The sound to play when the character attacks.
+     */
+    @Override
+    public void attack(Array&lt;Enemy&gt; enemies,  Sound shootSound) {
+        // Attack logic should be implemented by subclasses.
+<span class="nc" id="L132">    }</span>
+
+    /**
+     * Takes damage from an attack. If the health points drop to zero or below, the {@link #die()} method is called.
+     *
+     * @param damage The amount of damage dealt to the character.
+     */
+    public void takeDamage(int damage) {
+<span class="nc" id="L140">        hp -= damage;</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (this.hp &lt; 0) {</span>
+<span class="nc" id="L142">            this.hp = 0;</span>
+        }
+
+        // If health reaches zero, call die() method
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (this.hp == 0) {</span>
+<span class="nc" id="L147">            die();</span>
+        }
+<span class="nc" id="L149">    }</span>
+
+    /**
+     * This method is called when the character's health reaches zero. It can be used to perform actions
+     * when the character dies, such as displaying a message or triggering an animation.
+     */
+    public void die() {
+<span class="nc" id="L156">        System.out.println(&quot;Someone has died.&quot;);</span>
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Updates the state of the character. This method can be used to handle animations or other gameplay logic.
+     * The update logic is left to subclasses.
+     *
+     * @param delta The time elapsed since the last update.
+     * @param map The game map.
+     */
+<span class="nc" id="L166">    public void update(float delta, TiledMap map) {}</span>
+
+    /**
+     * Draws the character on the screen using a {@link SpriteBatch}.
+     *
+     * @param batch The {@link SpriteBatch} used to render the character.
+     */
+<span class="fc" id="L173">    public void render(SpriteBatch batch) {sprite.draw(batch);}</span>
+
+    /**
+     * Releases resources used by the character, such as textures and other graphical objects.
+     */
+    public void dispose() {
+<span class="nc bnc" id="L179" title="All 4 branches missed.">        if (idleTexture != null || runningTexture != null) {</span>
+<span class="nc" id="L180">            idleTexture.dispose();</span>
+<span class="nc" id="L181">            runningTexture.dispose();</span>
+        }
+<span class="nc bnc" id="L183" title="All 2 branches missed.">        if (sprite != null) {</span>
+<span class="nc" id="L184">            sprite.getTexture().dispose();</span>
+        }
+<span class="nc" id="L186">    }</span>
+
+    // Getters et setters
+
+    /**
+     * Returns the name of the character.
+     *
+     * @return The name of the character.
+     */
+    public String getName() {
+<span class="fc" id="L196">        return name;</span>
+    }
+
+    /**
+     * Returns the health points of the character.
+     *
+     * @return The health points of the character.
+     */
+    public int getHp() {
+<span class="nc" id="L205">        return hp;</span>
+    }
+
+    /**
+     * Returns the attack power of the character.
+     *
+     * @return The attack power of the character.
+     */
+    public int getAttackPower() {
+<span class="nc" id="L214">        return attackPower;</span>
+    }
+
+    /**
+     * Returns the damage dealt by the character.
+     *
+     * @return The damage dealt by the character.
+     */
+    public int getDamage() {
+<span class="nc" id="L223">        return attackPower;</span>
+    }
+
+    /**
+     * Returns the character's position on the X-axis.
+     *
+     * @return The character's position on the X-axis.
+     */
+    public float getX() {
+<span class="fc" id="L232">        return x;</span>
+    }
+
+    /**
+     * Returns the character's position on the Y-axis.
+     *
+     * @return The character's position on the Y-axis.
+     */
+    public float getY() {
+<span class="fc" id="L241">        return y;</span>
+    }
+
+    /**
+     * Returns the character's position as a {@link Vector2}.
+     *
+     * @return The position of the character.
+     */
+    public Vector2 getPosition() {
+<span class="nc" id="L250">        return new Vector2(x, y);</span>
+    }
+
+    /**
+     * Sets the position of the character.
+     *
+     * @param x The new X position of the character.
+     * @param y The new Y position of the character.
+     */
+    public void setPosition(float x, float y) {
+<span class="nc" id="L260">        this.x = x;</span>
+<span class="nc" id="L261">        this.y = y;</span>
+<span class="nc" id="L262">        this.sprite.setPosition(x, y);</span>
+<span class="nc" id="L263">    }</span>
+
+    /**
+     * Returns the current texture used to render the character.
+     * If the character is running, the running texture is returned, otherwise the idle texture.
+     *
+     * @return The texture used to render the character.
+     */
+    public Texture getTexture() {
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (isRunning) {</span>
+<span class="nc" id="L273">            return runningTexture;</span>
+        } else {
+<span class="nc" id="L275">            return idleTexture;</span>
+        }
+    }
+
+    /**
+     * Returns the movement speed of the character.
+     *
+     * @return The speed of the character.
+     */
+    public float getSpeed() {
+<span class="fc" id="L285">        return speed;</span>
+    }
+
+    /**
+     * Returns the sprite used to render the character.
+     *
+     * @return The sprite used to render the character.
+     */
+    public Sprite getSprite() {
+<span class="fc" id="L294">        return sprite;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

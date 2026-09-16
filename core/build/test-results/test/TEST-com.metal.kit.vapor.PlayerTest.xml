@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.metal.kit.vapor.PlayerTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-11-23T23:41:10" hostname="momo-ThinkPad-T570" time="1.729">
+  <properties/>
+  <testcase name="testDie()" classname="com.metal.kit.vapor.PlayerTest" time="1.584"/>
+  <testcase name="testMoveLeft()" classname="com.metal.kit.vapor.PlayerTest" time="0.1"/>
+  <testcase name="testPlayerRender()" classname="com.metal.kit.vapor.PlayerTest" time="0.016"/>
+  <testcase name="testMoveRight()" classname="com.metal.kit.vapor.PlayerTest" time="0.024"/>
+  <system-out><![CDATA[Warning: The collision layer 'map-border' is missing from the map.
+Warning: The collision layer 'building-border' is missing from the map.
+Warning: The collision layer 'vehicle-border' is missing from the map.
+Warning: The collision layer 'barrier-border' is missing from the map.
+Warning: The collision layer 'tree-border' is missing from the map.
+Warning: The collision layer 'tower-border' is missing from the map.
+Warning: The collision layer 'map-border' is missing from the map.
+Warning: The collision layer 'building-border' is missing from the map.
+Warning: The collision layer 'vehicle-border' is missing from the map.
+Warning: The collision layer 'barrier-border' is missing from the map.
+Warning: The collision layer 'tree-border' is missing from the map.
+Warning: The collision layer 'tower-border' is missing from the map.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

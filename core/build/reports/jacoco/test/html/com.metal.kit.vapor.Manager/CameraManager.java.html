@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CameraManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">CameraManager.java</span></div><h1>CameraManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+
+/**
+ * The camera manager for the game. This class allows the camera to be moved based on the player's position,
+ * with adjustments to keep the camera within the bounds of the map and to perform smooth movement.
+ */
+public class CameraManager {
+
+    /**
+     * The orthographic camera used to display the game scene and follow the player.
+     * It is responsible for managing the 2D view of the game map.
+     */
+    private OrthographicCamera camera;
+
+    /**
+     * The game map to which the camera is restricted. It is used to determine the map's dimensions
+     * and ensure that the camera does not move beyond its edges.
+     */
+    private TiledMap map;
+
+    /**
+     * Constructor to initialize the camera manager.
+     * The camera is created with the screen's dimensions and is centered on the player's position.
+     *
+     * @param map The game map to which the camera should be restricted.
+     */
+<span class="nc" id="L31">    public CameraManager(TiledMap map) {</span>
+<span class="nc" id="L32">        this.map = map;</span>
+<span class="nc" id="L33">        camera = new OrthographicCamera();</span>
+<span class="nc" id="L34">        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());</span>
+<span class="nc" id="L35">    }</span>
+
+    /**
+     * Updates the camera's position based on the player's position.
+     * The camera follows the player with smooth movement using interpolation.
+     * The camera is restricted to the map's dimensions to prevent it from going out of bounds.
+     *
+     * @param playerX The player's X position.
+     * @param playerY The player's Y position.
+     */
+    public void update(float playerX, float playerY) {
+<span class="nc" id="L46">        float targetX = playerX + 32 / 2;</span>
+<span class="nc" id="L47">        float targetY = playerY + 32 / 2;</span>
+
+        // Interpolation for smooth movement
+<span class="nc" id="L50">        camera.position.x += (targetX - camera.position.x) * GameConfigManager.CAMERA_SMOOTHING;</span>
+<span class="nc" id="L51">        camera.position.y += (targetY - camera.position.y) * GameConfigManager.CAMERA_SMOOTHING;</span>
+
+        // Restrict the camera within the map's dimensions
+<span class="nc" id="L54">        camera.position.x = Math.max(camera.viewportWidth / 2, Math.min(camera.position.x, map.getProperties().get(&quot;width&quot;, Integer.class) * 32 - camera.viewportWidth / 2));</span>
+<span class="nc" id="L55">        camera.position.y = Math.max(camera.viewportHeight / 2, Math.min(camera.position.y, map.getProperties().get(&quot;height&quot;, Integer.class) * 32 - camera.viewportHeight / 2));</span>
+
+<span class="nc" id="L57">        camera.update();</span>
+<span class="nc" id="L58">    }</span>
+
+    /**
+     * Returns the camera instance used by the manager.
+     *
+     * @return The {@link OrthographicCamera} object used to display the scene.
+     */
+    public OrthographicCamera getCamera() {
+<span class="nc" id="L66">        return camera;</span>
+    }
+
+    /**
+     * Disposes of the resources used by the CameraManager.
+     * This includes the TiledMap if it's no longer needed, and any other resources
+     * that the CameraManager might be holding onto.
+     */
+    public void dispose() {
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (map != null) {</span>
+<span class="nc" id="L76">            map.dispose();</span>
+        }
+<span class="nc" id="L78">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

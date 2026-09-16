@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameScreen.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Screen</a> &gt; <span class="el_source">GameScreen.java</span></div><h1>GameScreen.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Screen;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.metal.kit.vapor.Manager.CameraManager;
+import com.metal.kit.vapor.Manager.EnemyManager;
+import com.metal.kit.vapor.Manager.GameConfigManager;
+import com.metal.kit.vapor.Manager.WeaponManager;
+import com.metal.kit.vapor.characters.Player;
+import com.metal.kit.vapor.characters.Enemy;
+import com.metal.kit.vapor.characters.Weapon;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.metal.kit.vapor.Manager.CollisionMapManager;
+import com.metal.kit.vapor.MyGdxGame;
+import java.util.ArrayList;
+import com.metal.kit.vapor.Manager.DetectionManager;
+
+/**
+ * The {@link GameScreen} class represents the main game screen where the player can interact with the game world,
+ * control the character, collect weapons, and fight enemies.
+ * It handles the rendering of the map, player, enemies, and weapons, as well as user input for character actions.
+ */
+public class GameScreen implements Screen {
+
+    /**
+     * The SpriteBatch used for rendering the game graphics, such as the player, enemies, and weapons.
+     */
+    public SpriteBatch batch;
+
+    /**
+     * The TiledMap object that holds the game map.
+     */
+    public TiledMap map;
+
+    /**
+     * The TiledMapRenderer used for rendering the TiledMap to the screen.
+     */
+    public TiledMapRenderer mapRenderer;
+
+    /**
+     * The CameraManager responsible for managing the camera's position and movement within the game world.
+     */
+    private CameraManager cameraManager;
+
+    /**
+     * The width of the game map, calculated based on the map's properties.
+     */
+    private float mapWidth;
+
+    /**
+     * The height of the game map, calculated based on the map's properties.
+     */
+    private float mapHeight;
+
+    /**
+     * The player character in the game. This object contains information such as position, health, score, etc.
+     */
+    public Player player;
+
+    /**
+     * The name of the player character.
+     */
+    private String playerName;
+
+    /**
+     * The selected player character's name.
+     */
+    private String playerSelect;
+
+    /**
+     * The current level of the player.
+     */
+    private int playerLevel;
+
+    /**
+     * The current score of the player.
+     */
+    private int score;
+
+    /**
+     * The EnemyManager that handles the enemies in the game, including their behavior, creation, and updates.
+     */
+    public EnemyManager enemyManager;
+
+    /**
+     * The WeaponManager responsible for managing weapons in the game, including spawning and collection.
+     */
+    public WeaponManager weaponManager;
+
+    /**
+     * The sound effect that plays when the player picks up a weapon.
+     */
+    public Sound pickSoundWeapon;
+
+    /**
+     * The sound effect that plays when the player shoots their weapon.
+     */
+    public Sound shootSound;
+
+    /**
+     * A boolean flag that indicates whether to show the detection area of enemies on the screen.
+     */
+    private boolean showDetectionArea;
+
+    /**
+     * A ShapeRenderer used to draw shapes detection areas on the screen.
+     */
+    private ShapeRenderer shapeRenderer;
+
+    /**
+     * A BitmapFont used for rendering text on the screen, such as displaying the score and player information.
+     */
+<span class="nc" id="L125">    BitmapFont font = new BitmapFont();</span>
+
+    /**
+     * Constructor for {@link GameScreen}.
+     *
+     * @param playerName   The name of the player.
+     * @param playerSelect The selected player character.
+     * @param playerLevel  The current level of the player.
+     * @param score        The player's current score.
+     */
+<span class="nc" id="L135">    public GameScreen(String playerName, String playerSelect, int playerLevel, int score) {</span>
+<span class="nc" id="L136">        this.playerName = playerName;</span>
+<span class="nc" id="L137">        this.playerSelect = playerSelect;</span>
+<span class="nc" id="L138">        this.playerLevel = playerLevel;</span>
+<span class="nc" id="L139">        this.score = score;</span>
+
+<span class="nc" id="L141">        batch = new SpriteBatch();</span>
+<span class="nc" id="L142">        shapeRenderer = new ShapeRenderer();</span>
+
+        // Exceptions
+        try {
+<span class="nc" id="L146">            this.pickSoundWeapon = Gdx.audio.newSound(Gdx.files.internal(GameConfigManager.PICK_SOUND));</span>
+<span class="nc" id="L147">            this.shootSound = Gdx.audio.newSound(Gdx.files.internal(GameConfigManager.GUN_SOUND));</span>
+<span class="nc" id="L148">        } catch (Exception e) {</span>
+<span class="nc" id="L149">            throw new RuntimeException(&quot;Error loading sound assets: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L150">        }</span>
+
+<span class="nc" id="L152">    }</span>
+
+    /**
+     * Loads fonts for rendering text on the screen.
+     */
+    private void loadFonts(){
+        try {
+<span class="nc" id="L159">            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(&quot;fonts/lato.ttf&quot;));</span>
+<span class="nc" id="L160">            FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();</span>
+<span class="nc" id="L161">            parameter.size = 20;</span>
+<span class="nc" id="L162">            font = generator.generateFont(parameter);</span>
+<span class="nc" id="L163">            generator.dispose();</span>
+<span class="nc" id="L164">        } catch (Exception e) {</span>
+<span class="nc" id="L165">            throw new RuntimeException(&quot;Error loading fonts: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L166">        }</span>
+<span class="nc" id="L167">    }</span>
+
+    /**
+     * Loads the map based on the current player level.
+     */
+    private void loadMaps(){
+        try {
+<span class="nc" id="L174">            map = new TmxMapLoader().load(&quot;map&quot; + playerLevel + &quot;/Map.tmx&quot;);</span>
+<span class="nc" id="L175">            mapRenderer = new OrthogonalTiledMapRenderer(map);</span>
+<span class="nc" id="L176">            mapWidth = map.getProperties().get(&quot;width&quot;, Integer.class) * 32;</span>
+<span class="nc" id="L177">            mapHeight = map.getProperties().get(&quot;height&quot;, Integer.class) * 32;</span>
+<span class="nc" id="L178">            cameraManager = new CameraManager(map);</span>
+<span class="nc" id="L179">        } catch (Exception e) {</span>
+<span class="nc" id="L180">            throw new RuntimeException(&quot;Error loading map for level &quot; + playerLevel + &quot;: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L181">        }</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+     * Called when the screen is shown. Initializes the game components like fonts, maps, player, enemies, and input listeners.
+     */
+    @Override
+    public void show() {
+        // fonts
+<span class="nc" id="L190">        loadFonts();</span>
+
+        // maps
+<span class="nc" id="L193">        loadMaps();</span>
+
+        // Initialize the player
+<span class="nc" id="L196">        player = new Player(playerName,100, 300, 100, 10, GameConfigManager.PLAYER_SPEED, score);</span>
+<span class="nc" id="L197">        player.initTexture(&quot;player/&quot;+playerSelect+&quot;-idle.png&quot;, &quot;player/&quot;+playerSelect+&quot;-running.png&quot;, 6);</span>
+
+
+        // Initialize enemies and weapons
+<span class="nc" id="L201">        enemyManager = new EnemyManager();</span>
+<span class="nc" id="L202">        weaponManager = new WeaponManager();</span>
+
+        // Input listener for toggling detection area and player attack
+<span class="nc" id="L205">        Gdx.input.setInputProcessor(new InputAdapter() {</span>
+            @Override
+            public boolean keyDown(int keycode) {
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                if (keycode == Input.Keys.S) {</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    showDetectionArea = !showDetectionArea;</span>
+<span class="nc" id="L210">                    return true;</span>
+                }
+<span class="nc bnc" id="L212" title="All 2 branches missed.">                if (keycode == Input.Keys.SPACE) {</span>
+<span class="nc" id="L213">                    player.attack(enemyManager.getEnemies(), shootSound);</span>
+<span class="nc" id="L214">                    return true;</span>
+                }
+<span class="nc" id="L216">                return false;</span>
+            }
+        });
+<span class="nc" id="L219">    }</span>
+
+    /**
+     * Renders the game screen, including the map, player, enemies, weapons, and UI elements.
+     *
+     * @param delta Time elapsed since the last frame.
+     */
+    @Override
+    public void render(float delta) {
+<span class="nc" id="L228">        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);</span>
+<span class="nc" id="L229">        float deltaTime = Gdx.graphics.getDeltaTime();</span>
+
+        // Update the camera to follow the player
+<span class="nc" id="L232">        cameraManager.update(player.getX(), player.getY());</span>
+
+        // Render the map
+<span class="nc" id="L235">        mapRenderer.setView(cameraManager.getCamera());</span>
+<span class="nc" id="L236">        mapRenderer.render();</span>
+
+        // Prepare SpriteBatch for rendering
+<span class="nc" id="L239">        batch.setProjectionMatrix(cameraManager.getCamera().combined);</span>
+
+        // Update and render the player
+<span class="nc" id="L242">        player.update(delta, map);</span>
+<span class="nc" id="L243">        handleNextLevel(delta);</span>
+
+        // Update and render the enemies
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        for (Enemy enemy : enemyManager.getEnemies()) {</span>
+<span class="nc" id="L247">            enemy.update(player, map, delta);</span>
+<span class="nc" id="L248">        }</span>
+
+<span class="nc" id="L250">        batch.begin();</span>
+
+<span class="nc" id="L252">        player.render(batch);</span>
+
+        // Render enemy
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        for (Enemy enemy : enemyManager.getEnemies()) {</span>
+<span class="nc" id="L256">            enemy.render(batch);</span>
+<span class="nc" id="L257">        }</span>
+
+        // Render weapons
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        for (Weapon weapon : weaponManager.getWeapons()) {</span>
+<span class="nc" id="L261">            weapon.render(batch);</span>
+<span class="nc bnc" id="L262" title="All 2 branches missed.">            if (weapon.isCollected(player.getX(), player.getY(), player.sprite.getWidth(), player.sprite.getHeight())) {</span>
+<span class="nc" id="L263">                pickSoundWeapon.play();</span>
+<span class="nc" id="L264">                player.addWeapon(weapon);</span>
+<span class="nc" id="L265">                weaponManager.getWeapons().removeValue(weapon, true);</span>
+<span class="nc" id="L266">                break;</span>
+            }
+<span class="nc" id="L268">        }</span>
+
+        // Draw detection area if enabled
+<span class="nc" id="L271">        drawDetectionArea();</span>
+
+        // Draw on-screen info (score, health, weapons)
+<span class="nc" id="L274">        drawScreenInfo();</span>
+
+<span class="nc" id="L276">        batch.end();</span>
+<span class="nc" id="L277">    }</span>
+
+    /**
+     * Handles transitioning to the next level if the player reaches the &quot;next level&quot; area.
+     *
+     * @param delta Time elapsed since the last frame.
+     */
+    private void handleNextLevel(float delta) {
+<span class="nc" id="L285">        float newX = player.getX();</span>
+<span class="nc" id="L286">        float newY = player.getY();</span>
+
+        // Check if the player collides with the next level trigger area
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        if (CollisionMapManager.isCollisionWithNextLevel(map, &quot;next-level-border&quot;, newX, newY, player.getSprite().getWidth(), player.getSprite().getHeight())) {</span>
+<span class="nc" id="L290">            MyGdxGame myGame = (MyGdxGame) Gdx.app.getApplicationListener();</span>
+
+            // Reset detection and player state, and transition to the next level
+<span class="nc" id="L293">            DetectionManager.getInstance().updateDetection(false);</span>
+<span class="nc" id="L294">            player.dispose();</span>
+<span class="nc" id="L295">            playerLevel += 1;</span>
+<span class="nc" id="L296">            myGame.setScreen(new NextLevelScreen(player.getName(),playerSelect, playerLevel, player.getScore()));</span>
+        }
+<span class="nc" id="L298">    }</span>
+
+    /**
+     * Renders the on-screen information such as player name, score, health, and collected weapons.
+     */
+    private void drawScreenInfo() {
+<span class="nc" id="L304">        float textX = cameraManager.getCamera().position.x - Gdx.graphics.getWidth() / 2 + 30;</span>
+<span class="nc" id="L305">        float textY = cameraManager.getCamera().position.y + Gdx.graphics.getHeight() / 2 - 20;</span>
+<span class="nc" id="L306">        font.draw(batch, &quot;Player name : &quot; + playerName, textX, textY );</span>
+<span class="nc" id="L307">        textY -= 20;</span>
+<span class="nc" id="L308">        font.draw(batch, &quot;Score : &quot; + player.getScore(), textX, textY);</span>
+<span class="nc" id="L309">        textY -= 20;</span>
+<span class="nc" id="L310">        font.draw(batch, &quot;Health : &quot; + player.getHp(), textX, textY);</span>
+<span class="nc" id="L311">        textY -= 20;</span>
+<span class="nc" id="L312">        font.draw(batch, &quot;Weapons &quot;, textX, textY );</span>
+<span class="nc" id="L313">        textY -= 60;</span>
+
+        // Render collected weapons
+<span class="nc" id="L316">        ArrayList&lt;Weapon&gt; weapons = player.getInventory().getWeapons();</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        for (Weapon weapon : weapons) {</span>
+<span class="nc" id="L318">            Texture weaponTexture = weapon.getTexture();</span>
+<span class="nc" id="L319">            batch.draw(weaponTexture, textX, textY);</span>
+<span class="nc" id="L320">            textY -= 50;</span>
+<span class="nc" id="L321">        }</span>
+<span class="nc" id="L322">    }</span>
+
+    /**
+     * Renders the detection area of enemies if enabled.
+     */
+    private void drawDetectionArea() {
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (showDetectionArea) {</span>
+<span class="nc" id="L329">            shapeRenderer.setProjectionMatrix(cameraManager.getCamera().combined);</span>
+<span class="nc" id="L330">            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</span>
+<span class="nc" id="L331">            shapeRenderer.setColor(0, 0, 1, 0.5f);</span>
+
+            // Render detection areas for each enemy
+<span class="nc bnc" id="L334" title="All 2 branches missed.">            for (Enemy enemy : enemyManager.getEnemies()) {</span>
+<span class="nc" id="L335">                float cctvX = enemy.getX();</span>
+<span class="nc" id="L336">                float cctvY = enemy.getY();</span>
+<span class="nc" id="L337">                float detectionDistance = enemy.getDetectionDistance();</span>
+<span class="nc" id="L338">                float detectionRadius = enemy.getDetectionRadius();</span>
+<span class="nc" id="L339">                float detectionDirection = enemy.detectionDirection;</span>
+
+<span class="nc" id="L341">                shapeRenderer.setColor(0, 0, 1, 0.5f);</span>
+<span class="nc" id="L342">                shapeRenderer.arc(cctvX, cctvY, detectionDistance, detectionDirection-70, detectionRadius/2);</span>
+<span class="nc" id="L343">            }</span>
+<span class="nc" id="L344">            shapeRenderer.end();</span>
+        }
+<span class="nc" id="L346">    }</span>
+
+    /**
+     * Called when the window is resized.
+     * This method updates the stage's viewport.
+     *
+     * @param width  The new width of the window
+     * @param height The new height of the window
+     */
+    @Override
+<span class="nc" id="L356">    public void resize(int width, int height) {}</span>
+
+    /**
+     * Called when the application is paused
+     */
+    @Override
+<span class="nc" id="L362">    public void pause() {}</span>
+
+    /**
+     * Called when the application resumes after being paused.
+     */
+    @Override
+<span class="nc" id="L368">    public void resume() {}</span>
+
+    /**
+     * Méthode appelée lorsque l'écran est caché (lorsque cet écran est remplacé par un autre).
+     */
+    @Override
+<span class="nc" id="L374">    public void hide() {}</span>
+
+    /**
+     * Disposes of the resources used by this screen.
+     * This method cleans up the assets and UI elements to free memory.
+     */
+    @Override
+    public void dispose() {
+        try {
+<span class="nc" id="L383">            System.out.println(&quot;GAME SCREEN DISPOSE ...&quot;);</span>
+
+            // Dispose of the tiled map and its renderer
+<span class="nc bnc" id="L386" title="All 2 branches missed.">            if (map != null) {</span>
+<span class="nc" id="L387">                map.dispose();</span>
+            }
+
+            // Dispose of the SpriteBatch if it exists
+<span class="nc bnc" id="L391" title="All 2 branches missed.">            if (batch != null) {</span>
+<span class="nc" id="L392">                batch.dispose();</span>
+            }
+
+            // Dispose of the player object and its resources (textures, animations, etc.)
+<span class="nc bnc" id="L396" title="All 2 branches missed.">            if (player != null) {</span>
+<span class="nc" id="L397">                player.dispose();</span>
+            }
+
+            // Dispose of the sound assets to free up memory
+<span class="nc bnc" id="L401" title="All 2 branches missed.">            if (pickSoundWeapon != null) {</span>
+<span class="nc" id="L402">                pickSoundWeapon.dispose();</span>
+            }
+<span class="nc bnc" id="L404" title="All 2 branches missed.">            if (shootSound != null) {</span>
+<span class="nc" id="L405">                shootSound.dispose();</span>
+            }
+
+            // Dispose of the enemy manager and its resources (e.g., enemies, textures)
+<span class="nc bnc" id="L409" title="All 2 branches missed.">            if (enemyManager != null) {</span>
+<span class="nc" id="L410">                enemyManager.dispose();</span>
+            }
+
+            // Dispose of the weapon manager and its resources (e.g., weapons, textures)
+<span class="nc bnc" id="L414" title="All 2 branches missed.">            if (weaponManager != null) {</span>
+<span class="nc" id="L415">                weaponManager.dispose();</span>
+            }
+
+            // Dispose of the font resource used for text rendering
+<span class="nc bnc" id="L419" title="All 2 branches missed.">            if (font != null) {</span>
+<span class="nc" id="L420">                font.dispose();</span>
+            }
+
+            // Dispose of the shape renderer
+<span class="nc bnc" id="L424" title="All 2 branches missed.">            if (shapeRenderer != null) {</span>
+<span class="nc" id="L425">                shapeRenderer.dispose();</span>
+            }
+
+            // Dispose of the camera manager if necessary (usually handled by the map renderer, but for completeness)
+<span class="nc bnc" id="L429" title="All 2 branches missed.">            if (cameraManager != null) {</span>
+<span class="nc" id="L430">                cameraManager.dispose();</span>
+            }
+<span class="nc" id="L432">        } catch (Exception e) {</span>
+<span class="nc" id="L433">            throw new RuntimeException(&quot;ERROR DURING GAME SCREEN DISPOSE : &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L434">        }</span>
+<span class="nc" id="L435">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

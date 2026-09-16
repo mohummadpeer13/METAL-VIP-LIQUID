@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  libgdx_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - WAYLAND_DISPLAY=wayland-0
+      - XDG_RUNTIME_DIR=/run/user/1000
+    volumes:
+      - /run/user/1000/wayland-0:/run/user/1000/wayland-0
+      - /dev/dri:/dev/dri
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+  
+    network_mode: "host"

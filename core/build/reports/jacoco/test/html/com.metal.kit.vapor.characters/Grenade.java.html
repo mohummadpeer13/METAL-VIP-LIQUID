@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Grenade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Grenade.java</span></div><h1>Grenade.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+
+/**
+ * Represents a grenade in the game.
+ * The {@link Grenade} class extends {@link Weapon} and adds a sound effect for the grenade's explosion.
+ * When the grenade is used, it plays an explosion sound.
+ */
+public class Grenade extends Weapon{
+
+    /** The sound played when the grenade explodes */
+    private Sound grenadeSound;
+
+    /**
+     * Constructs a new {@link Grenade} object.
+     *
+     * @param name The name of the grenade (e.g., &quot;Frag Grenade&quot;).
+     * @param texture The texture that represents the appearance of the grenade.
+     * @param x The X position of the grenade in the game world.
+     * @param y The Y position of the grenade in the game world.
+     * @param damage The damage dealt by the grenade's explosion.
+     * @param grenadeSound The path to the sound file that plays when the grenade explodes.
+     */
+    public Grenade(String name, Texture texture, float x, float y, int damage, String grenadeSound) {
+<span class="nc" id="L28">        super(name, texture, x, y, damage);</span>
+<span class="nc" id="L29">        this.grenadeSound = Gdx.audio.newSound(Gdx.files.internal(grenadeSound));;</span>
+<span class="nc" id="L30">    }</span>
+
+
+    /**
+     * Disposes of the resources used by the grenade, including its texture and sound.
+     * &lt;p&gt;
+     * This method is called when the grenade is no longer in use, in order to free memory.
+     * &lt;/p&gt;
+     */
+    @Override
+    public void dispose() {
+<span class="nc" id="L41">        super.dispose();</span>
+
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (grenadeSound != null) {</span>
+<span class="nc" id="L44">            grenadeSound.dispose();</span>
+<span class="nc" id="L45">            grenadeSound = null;</span>
+        }
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * Uses the grenade, triggering its explosion and playing the associated sound.
+     * &lt;p&gt;
+     * In this implementation, using the grenade consists solely of playing the explosion sound.
+     * This method could be extended to include additional effects, such as animation or damage to enemies.
+     * &lt;/p&gt;
+     */
+    @Override
+    public void use() {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (grenadeSound != null) {</span>
+<span class="nc" id="L59">            grenadeSound.play();</span>
+        }
+<span class="nc" id="L61">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

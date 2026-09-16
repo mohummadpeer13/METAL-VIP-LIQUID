@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Guard.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Guard.java</span></div><h1>Guard.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.metal.kit.vapor.Manager.DetectionManager;
+import com.metal.kit.vapor.Manager.GameConfigManager;
+import com.badlogic.gdx.math.Vector2;
+
+/**
+ * The {@code Guard} class represents an enemy guard in the game.
+ * &lt;p&gt;
+ * A guard is a mobile enemy that can detect a player within a specific area. When the player is detected,
+ * the guard triggers an alert sound and begins pursuing the player within its detection range. The guard also
+ * has animations for its movement and idle states.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * The guard patrols a defined area and is capable of detecting a player when they enter its detection radius.
+ * If the player is detected, the guard will trigger an alert and chase after the player. If the player is not
+ * detected, the guard continues patrolling in its designated zone.
+ * &lt;/p&gt;
+ *
+ * @see Enemy
+ * @see Player
+ * @see DetectionManager
+ * @see GameConfigManager
+ */
+public class Guard extends Enemy{
+
+    /**
+     * Constructor to initialize a guard with basic parameters.
+     *
+     * @param name                The name of the guard.
+     * @param x                   The initial X position of the guard.
+     * @param y                   The initial Y position of the guard.
+     * @param health              The initial health of the guard.
+     * @param damage              The damage dealt by the guard.
+     * @param speed               The movement speed of the guard.
+     * @param zoneX               The X position of the guard's patrol zone.
+     * @param zoneY               The Y position of the guard's patrol zone.
+     * @param zoneWidth           The width of the guard's patrol zone.
+     * @param zoneHeight          The height of the guard's patrol zone.
+     * @param detectionDistance   The distance at which the guard can detect the player.
+     * @param detectionRadius     The angular radius within which the guard can detect the player.
+     * @param detectionDirection  The direction of detection for the guard, expressed in degrees.
+     */
+    public Guard(String name, float x, float y, int health, int damage, float speed, float zoneX, float zoneY, float zoneWidth, float zoneHeight,  float detectionDistance, float detectionRadius, float detectionDirection) {
+<span class="nc" id="L48">        super(name, x, y, health, damage, speed, zoneX, zoneY, zoneWidth, zoneHeight, detectionDistance, detectionRadius, detectionDirection);</span>
+<span class="nc" id="L49">        this.alertSound = Gdx.audio.newSound(Gdx.files.internal(GameConfigManager.CCTV_ALERT_SOUND));</span>
+<span class="nc" id="L50">        this.facingRight = true;</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Updates the guard's state on every frame.
+     * This method checks if the player is detected. If the player is detected, the guard triggers the alert
+     * and pursues the player. If the player is not detected, the guard continues patrolling within its defined zone.
+     *
+     * @param player The player to detect and pursue.
+     * @param map    The game map used to check for collisions.
+     * @param delta  The time elapsed since the last update (in seconds).
+     */
+    @Override
+    public void update( Player player,  TiledMap map, float delta) {
+<span class="nc" id="L64">        stateTime += delta;</span>
+        TextureRegion currentFrame;
+
+        // Update the guard's animation based on the movement state
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (facingRight || !facingRight) {</span>
+<span class="nc" id="L69">            currentFrame = runAnimation.getKeyFrame(stateTime, true);</span>
+        } else {
+<span class="nc" id="L71">            currentFrame = idleAnimation.getKeyFrame(stateTime, true);</span>
+        }
+
+<span class="nc" id="L74">        sprite.setRegion(currentFrame);</span>
+
+        // Calculate the positions for player and guard
+<span class="nc" id="L77">        Vector2 playerPosition = new Vector2(player.getX() + player.getSprite().getHeight()/2, player.getY() + player.getSprite().getHeight()/2);</span>
+<span class="nc" id="L78">        Vector2 enemyPosition = new Vector2(this.x, this.y);</span>
+
+        // Detect if the player is within the guard's detection range
+<span class="nc" id="L81">        boolean playerDetected = detectPlayer(enemyPosition, playerPosition);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (playerDetected) {</span>
+<span class="nc" id="L83">            System.out.println(getName() + &quot; detect &quot; + player.getName());</span>
+<span class="nc" id="L84">            DetectionManager.getInstance().updateDetection(true);</span>
+<span class="nc" id="L85">            triggerAlert();</span>
+        } else {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (!DetectionManager.getInstance().isPlayerDetected()) {</span>
+<span class="nc" id="L88">                resetAlert();</span>
+<span class="nc" id="L89">                move(delta, map);</span>
+            }
+        }
+
+        // Pursue the player if detected
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (DetectionManager.getInstance().isPlayerDetected()) {</span>
+<span class="nc" id="L95">            pursuitPlayer(player, map, delta);</span>
+        }
+<span class="nc" id="L97">    }</span>
+
+    /**
+     * Moves the guard within its patrol zone.
+     * The guard moves horizontally within the specified zone defined by {@code zoneX}, {@code zoneY},
+     * {@code zoneWidth}, and {@code zoneHeight}. The guard changes direction when it reaches the zone boundaries.
+     *
+     * @param delta The time elapsed since the last update (in seconds).
+     * @param map   The game map used to check for collisions during movement.
+     */
+    @Override
+    public void move(float delta, TiledMap map) {
+
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (facingRight) {</span>
+<span class="nc" id="L111">            x += GameConfigManager.GUARD_SPEED * delta;</span>
+<span class="nc" id="L112">            sprite.setFlip(false, false);</span>
+        } else {
+<span class="nc" id="L114">            x -= GameConfigManager.GUARD_SPEED * delta;</span>
+<span class="nc" id="L115">            sprite.setFlip(true, false);</span>
+        }
+
+        // Ensure the guard stays within the patrol zone and reverse direction if necessary
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (x &lt; zoneX) {</span>
+<span class="nc" id="L120">            x = zoneX;</span>
+<span class="nc" id="L121">            facingRight = true;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        } else if (x &gt; zoneX + zoneWidth - sprite.getWidth()) {</span>
+<span class="nc" id="L123">            x = zoneX + zoneWidth - sprite.getWidth();</span>
+<span class="nc" id="L124">            facingRight = false;</span>
+        }
+
+        // Keep the guard vertically centered in the patrol zone
+<span class="nc" id="L128">        y = zoneY + zoneHeight / 2 - sprite.getHeight() / 2;</span>
+
+<span class="nc" id="L130">        sprite.setPosition(x, y);</span>
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Triggers the alert sound when the player is detected by the guard.
+     * The alert sound will only be played once for each detection event.
+     */
+    @Override
+    public void triggerAlert() {
+<span class="nc" id="L139">        super.triggerAlert();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (!alertTriggered) {</span>
+<span class="nc" id="L141">            alertSound.play();</span>
+<span class="nc" id="L142">            alertTriggered = true;</span>
+        }
+<span class="nc" id="L144">    }</span>
+
+    /**
+     * Resets the alert state, indicating that the alert has been lifted.
+     * This method is called when the player exits the detection range or when the alert needs to be reset.
+     */
+    public void resetAlert() {
+<span class="nc" id="L151">        alertTriggered = false;</span>
+<span class="nc" id="L152">    }</span>
+
+
+    /**
+     * Releases the resources used by the guard, including the alert sound.
+     * This method is called when the guard is destroyed or when the application exits.
+     */
+    @Override
+    public void dispose() {
+<span class="nc" id="L161">        super.dispose();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (alertSound != null) {</span>
+<span class="nc" id="L163">            alertSound.dispose();</span>
+        }
+<span class="nc" id="L165">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Weapon.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Weapon.java</span></div><h1>Weapon.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
+/**
+ * Abstract class representing a weapon in the game.
+ * &lt;p&gt;
+ * Weapons have a name, texture, position, collision rectangle, and damage.
+ * Each weapon can be used in a specific way depending on its subclass.
+ * &lt;/p&gt;
+ */
+public abstract class Weapon {
+    /** The name of the weapon. */
+    public String name;
+
+    /** The texture representing the weapon. */
+    public Texture texture;
+
+    /** The position of the weapon in the game. */
+    public float x, y;
+
+    /** The collision rectangle of the weapon. */
+    public Rectangle bounds;
+
+    /** The damage dealt by the weapon when used. */
+    public int damage;
+
+    /**
+     * Constructor for the {@link Weapon} class.
+     * &lt;p&gt;
+     * This constructor initializes the weapon's properties, including its name, texture, position, collision rectangle,
+     * and damage.
+     * &lt;/p&gt;
+     *
+     * @param name   The name of the weapon.
+     * @param texture The texture representing the weapon.
+     * @param x The X position of the weapon.
+     * @param y The Y position of the weapon.
+     * @param damage The damage dealt by the weapon.
+     */
+<span class="nc" id="L44">    public Weapon(String name, Texture texture, float x, float y, int damage) {</span>
+<span class="nc" id="L45">        this.name = name;</span>
+<span class="nc" id="L46">        this.texture = texture;</span>
+<span class="nc" id="L47">        this.x = x;</span>
+<span class="nc" id="L48">        this.y = y;</span>
+<span class="nc" id="L49">        this.bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());</span>
+<span class="nc" id="L50">        this.damage = damage;</span>
+<span class="nc" id="L51">    }</span>
+
+    /**
+     * Gets the name of the weapon.
+     *
+     * @return The name of the weapon.
+     */
+    public String getName() {
+<span class="nc" id="L59">        return name;</span>
+    }
+
+    /**
+     * Gets the texture of the weapon.
+     *
+     * @return The texture of the weapon.
+     */
+    public Texture getTexture() {
+<span class="nc" id="L68">        return texture;</span>
+    }
+
+    /**
+     * Gets the X position of the weapon.
+     *
+     * @return The X position of the weapon.
+     */
+    public float getX() {
+<span class="nc" id="L77">        return x;</span>
+    }
+
+    /**
+     * Gets the Y position of the weapon.
+     *
+     * @return The Y position of the weapon.
+     */
+    public float getY() {
+<span class="nc" id="L86">        return y;</span>
+    }
+
+    /**
+     * Gets the width of the weapon based on the width of its texture.
+     *
+     * @return The width of the weapon.
+     */
+    public float getWidth() {
+<span class="nc" id="L95">        return texture.getWidth();</span>
+    }
+
+    /**
+     * Gets the height of the weapon based on the height of its texture.
+     *
+     * @return The height of the weapon.
+     */
+    public float getHeight() {
+<span class="nc" id="L104">        return texture.getHeight();</span>
+    }
+
+    /**
+     * Updates the dimensions of the collision rectangle based on the current position of the weapon.
+     * &lt;p&gt;
+     * This method should be called if the position of the weapon changes to update its collision area.
+     * &lt;/p&gt;
+     */
+    public void updateBounds() {
+<span class="nc" id="L114">        bounds.setPosition(x, y);</span>
+<span class="nc" id="L115">    }</span>
+
+    /**
+     * Gets the collision rectangle of the weapon.
+     * &lt;p&gt;
+     * This rectangle is used to handle collisions with other objects in the game.
+     * &lt;/p&gt;
+     *
+     * @return The collision rectangle of the weapon.
+     */
+    public Rectangle getBounds() {
+<span class="nc" id="L126">        return bounds;</span>
+    }
+
+    /**
+     * Gets the damage dealt by the weapon.
+     * &lt;p&gt;
+     * This method returns the amount of damage the weapon deals when used.
+     * &lt;/p&gt;
+     *
+     * @return The damage dealt by the weapon.
+     */
+    public int getDamage() {
+<span class="nc" id="L138">        return damage;</span>
+    }
+
+
+    /**
+     * Gets the position of the weapon as a 2D vector.
+     * &lt;p&gt;
+     * This method returns a {@link Vector2} object that represents the position of the weapon in 2D space.
+     * &lt;/p&gt;
+     *
+     * @return A {@link Vector2} representing the position of the weapon.
+     */
+    public Vector2 getPosition() {
+<span class="nc" id="L151">        return new Vector2(x, y);</span>
+    }
+
+    /**
+     * Checks if the weapon has been collected by the player.
+     * &lt;p&gt;
+     * This method checks if the weapon is in collision with the player, based on the player's position and dimensions.
+     * &lt;/p&gt;
+     *
+     * @param playerX The X position of the player.
+     * @param playerY The Y position of the player.
+     * @param playerWidth The width of the player.
+     * @param playerHeight The height of the player.
+     * @return True if the player is in collision with the weapon, otherwise false.
+     */
+    public boolean isCollected(float playerX, float playerY, float playerWidth, float playerHeight) {
+<span class="nc bnc" id="L167" title="All 8 branches missed.">        return playerX &lt; x + texture.getWidth() &amp;&amp; playerX + playerWidth &gt; x &amp;&amp; playerY &lt; y + texture.getHeight() &amp;&amp; playerY + playerHeight &gt; y;</span>
+    }
+
+    /**
+     * Abstract method to be implemented in subclasses to define the specific use of the weapon.
+     * &lt;p&gt;
+     * Each weapon subclass (e.g., Pistol, Grenade) must provide an implementation of this method to define its behavior
+     * when used, such as firing a bullet or throwing an explosive.
+     * &lt;/p&gt;
+     */
+    public abstract void use();
+
+    /**
+     * Renders the weapon on the screen at position (x, y) using the {@link SpriteBatch}.
+     * &lt;p&gt;
+     * This method is responsible for drawing the weapon in the game. It uses a {@link SpriteBatch} to draw the weapon's texture
+     * at the specified position on the screen.
+     * &lt;/p&gt;
+     *
+     * @param batch The {@link SpriteBatch} used to draw the weapon on the screen.
+     */
+    public void render(SpriteBatch batch) {
+<span class="nc" id="L189">        batch.draw(texture, x, y, texture.getWidth() * 0.5f, texture.getHeight() * 0.5f);</span>
+<span class="nc" id="L190">    }</span>
+
+    /**
+     * Releases resources used by the weapon, including its texture.
+     * &lt;p&gt;
+     * This method should be called when the weapon is no longer needed to free up memory used by the texture.
+     * &lt;/p&gt;
+     */
+    public void dispose() {
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (texture != null) {</span>
+<span class="nc" id="L200">            texture.dispose();</span>
+<span class="nc" id="L201">            texture = null;</span>
+        }
+<span class="nc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

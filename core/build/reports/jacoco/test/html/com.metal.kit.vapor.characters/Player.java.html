@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.utils.Array;
+import com.metal.kit.vapor.Manager.CollisionMapManager;
+import com.metal.kit.vapor.Manager.GameConfigManager;
+
+import java.util.List;
+
+
+/**
+ * Represents the player in the game. This class extends {@link Character} and adds specific features
+ * such as inventory management, score tracking, and player actions (movement, attacking).
+ * &lt;p&gt;
+ * The player can attack enemies, move around the map, and interact with objects through their inventory.
+ * The character's animation is managed based on their movement or idle state.
+ * &lt;/p&gt;
+ */
+public class Player extends Character {
+
+    /** The player's inventory containing their weapons */
+    private Inventory inventory;
+
+    /** The player's score, which increases when they kill enemies */
+    private int score;
+
+    /** Indicates if the player is facing right (true) or left (false) */
+<span class="fc" id="L31">    private boolean facingRight = false;</span>
+
+    /**
+     * Constructs a player with basic parameters.
+     *
+     * @param name The name of the player
+     * @param x The initial X position of the player
+     * @param y The initial Y position of the player
+     * @param hp The initial health points of the player
+     * @param attackPower The attack power of the player
+     * @param speed The movement speed of the player
+     * @param score The initial score of the player.
+     */
+    public Player(String name, float x, float y, int hp, int attackPower, float speed, int score) {
+<span class="fc" id="L45">        super(name, x, y, hp, attackPower, speed);</span>
+<span class="fc" id="L46">        this.score = score;</span>
+<span class="fc" id="L47">        this.inventory = new Inventory();</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Performs an attack on enemies within the player's attack range. If an enemy is within range,
+     * it is eliminated, and the player's score increases.
+     *
+     * @param enemies The list of enemies that can be attacked
+     * @param shootSound The sound played when the attack is executed
+     */
+    @Override
+    public void attack(Array&lt;Enemy&gt; enemies, Sound shootSound) {
+        try {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            for (int i = enemies.size - 1; i &gt;= 0; i--) {</span>
+<span class="nc" id="L61">                Enemy enemy = enemies.get(i);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                if (isEnemyInRange(enemy)) {</span>
+<span class="nc" id="L63">                    this.score += 5;</span>
+<span class="nc" id="L64">                    shootSound.play();</span>
+<span class="nc" id="L65">                    enemies.removeIndex(i);</span>
+<span class="nc" id="L66">                    enemy.dispose();</span>
+                }
+            }
+<span class="nc" id="L69">        } catch (Exception e) {</span>
+<span class="nc" id="L70">            Gdx.app.error(&quot;Player&quot;, &quot;Error during attack: &quot; + e.getMessage());</span>
+<span class="nc" id="L71">        }</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Checks if an enemy is within the player's attack range.
+     *
+     * @param enemy The enemy to check
+     * @return {@code true} if the enemy is within attack range, {@code false} otherwise
+     */
+    private boolean isEnemyInRange(Enemy enemy) {
+        try {
+            // Calculate the distance between the player and the enemy
+<span class="nc" id="L83">            float distance = (float) Math.sqrt(Math.pow(this.x - enemy.getX(), 2) + Math.pow(this.y - enemy.getY(), 2));</span>
+
+            // Check if the enemy is within attack range
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (distance &lt;= GameConfigManager.PLAYER_ATTACK_RANGE) {</span>
+
+                // Check if the enemy is in the direction the player is facing (based on the facingRight variable)
+<span class="nc bnc" id="L89" title="All 8 branches missed.">                boolean isEnemyInFront = (!this.facingRight &amp;&amp; enemy.getX() &gt; this.x) || (this.facingRight &amp;&amp; enemy.getX() &lt; this.x);</span>
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                if (isEnemyInFront) {</span>
+<span class="nc" id="L92">                    return true;</span>
+                }
+            }
+<span class="nc" id="L95">        } catch (Exception e) {</span>
+<span class="nc" id="L96">            Gdx.app.error(&quot;Player&quot;, &quot;Error calculating enemy range: &quot; + e.getMessage());</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">        return false;</span>
+    }
+
+
+    /**
+     * Updates the player's state, including animations and movement. This method is called on each
+     * frame to handle player behavior (animation, movement).
+     *
+     * @param delta The time elapsed since the last update
+     * @param map The game map used for collision handling
+     */
+    @Override
+    public void update(float delta, TiledMap map) {
+<span class="nc" id="L111">        super.update(delta, map);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (runAnimation != null) {</span>
+<span class="nc" id="L113">            stateTime += delta;</span>
+
+<span class="nc bnc" id="L115" title="All 4 branches missed.">            if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT) ||</span>
+<span class="nc bnc" id="L116" title="All 4 branches missed.">                Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP) || Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {</span>
+<span class="nc" id="L117">                isRunning = true;</span>
+<span class="nc" id="L118">                TextureRegion currentFrame = runAnimation.getKeyFrame(stateTime, true);</span>
+<span class="nc" id="L119">                sprite.setRegion(currentFrame);</span>
+<span class="nc" id="L120">            } else {</span>
+<span class="nc" id="L121">                isRunning = false;</span>
+<span class="nc" id="L122">                TextureRegion currentFrame = idleAnimation.getKeyFrame(stateTime, true);</span>
+<span class="nc" id="L123">                sprite.setRegion(currentFrame);</span>
+            }
+        }
+<span class="nc" id="L126">        move(delta, map);</span>
+<span class="nc" id="L127">        this.sprite.setPosition(x, y);</span>
+<span class="nc" id="L128">    }</span>
+
+    /**
+     * Moves the player based on the direction keys pressed. Movement is handled with collision checks
+     * to avoid moving through obstacles.
+     *
+     * @param delta The time elapsed since the last update
+     * @param map The game map used to check for collisions
+     */
+    @Override
+    public void move(float delta, TiledMap map) {
+
+<span class="fc" id="L140">        float moveX = 0;</span>
+<span class="fc" id="L141">        float moveY = 0;</span>
+
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {</span>
+<span class="fc" id="L144">            moveX = -GameConfigManager.PLAYER_SPEED * delta;</span>
+<span class="fc" id="L145">            facingRight = true;</span>
+        }
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {</span>
+<span class="fc" id="L148">            moveX = GameConfigManager.PLAYER_SPEED * delta;</span>
+<span class="fc" id="L149">            facingRight = false;</span>
+        }
+
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {</span>
+<span class="nc" id="L153">            moveY = GameConfigManager.PLAYER_SPEED * delta;</span>
+        }
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {</span>
+<span class="nc" id="L156">            moveY = -GameConfigManager.PLAYER_SPEED * delta;</span>
+        }
+
+<span class="fc" id="L159">        float newX = this.x + moveX;</span>
+<span class="fc" id="L160">        float newY = this.y + moveY;</span>
+
+<span class="fc" id="L162">        List&lt;String&gt; collisionLayers = List.of(&quot;map-border&quot;, &quot;building-border&quot;, &quot;vehicle-border&quot;, &quot;barrier-border&quot;, &quot;tree-border&quot;, &quot;tower-border&quot;);</span>
+
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (!CollisionMapManager.isCollisionWithObjects(map, collisionLayers, newX, newY, this.sprite.getWidth(), this.sprite.getHeight())) {</span>
+            // If no collision, apply the movement
+<span class="fc" id="L166">            this.x = newX;</span>
+<span class="fc" id="L167">            this.y = newY;</span>
+        }
+
+<span class="fc" id="L170">        this.sprite.setFlip(facingRight, false);</span>
+<span class="fc" id="L171">    }</span>
+
+    /**
+     * Adds a weapon to the player's inventory.
+     *
+     * @param weapon The weapon to add to the inventory
+     */
+    public void addWeapon(Weapon weapon) {
+<span class="nc" id="L179">        inventory.addWeapon(weapon);</span>
+<span class="nc" id="L180">    }</span>
+
+    /**
+     * Returns the player's inventory.
+     *
+     * @return The player's inventory
+     */
+    public Inventory getInventory() {
+<span class="nc" id="L188">        return inventory;</span>
+    }
+
+    /**
+     * Returns the player's current score. The score increases each time an enemy is killed.
+     *
+     * @return The player's score
+     */
+    public int getScore() {
+<span class="nc" id="L197">        return score;</span>
+    }
+
+    /**
+     * Method called when the player dies. Displays a message in the console indicating the player is dead.
+     */
+    @Override
+    public void die() {
+<span class="fc" id="L205">        System.out.println(getName() + &quot; is die !!!&quot;);</span>
+<span class="fc" id="L206">    }</span>
+
+    /**
+     * Disposes of the resources used by the player, including textures and other graphical objects.
+     */
+    public void dispose() {
+        try {
+<span class="nc" id="L213">            super.dispose();</span>
+<span class="nc" id="L214">        } catch (Exception e) {</span>
+<span class="nc" id="L215">            throw new RuntimeException(&quot;ERROR DURING PLAYER DISPOSE : &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L216">        }</span>
+<span class="nc" id="L217">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

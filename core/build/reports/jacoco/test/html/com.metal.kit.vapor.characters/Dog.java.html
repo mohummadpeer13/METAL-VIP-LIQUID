@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Dog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.characters</a> &gt; <span class="el_source">Dog.java</span></div><h1>Dog.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.characters;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Vector2;
+import com.metal.kit.vapor.Manager.DetectionManager;
+import com.metal.kit.vapor.Manager.GameConfigManager;
+
+/**
+ * The {@code Dog} class represents an enemy dog in the game.
+ * &lt;p&gt;
+ * The dog is an enemy that can detect a player within its detection zone. When a player is detected,
+ * the dog triggers an alert sound and may pursue the player. The dog has animations for its movement
+ * and idle state and can patrol within a designated zone.
+ * &lt;/p&gt;
+ * &lt;p&gt;
+ * The dog's movement is limited to a patrol area, and it will reverse direction upon reaching the edges
+ * of its patrol zone. When the player enters the dog's detection field, the dog will trigger an alert.
+ * &lt;/p&gt;
+ *
+ * @see Enemy
+ * @see Player
+ * @see DetectionManager
+ * @see GameConfigManager
+ */
+public class Dog extends Enemy {
+
+    /**
+     * Constructor to initialize a dog with basic parameters.
+     *
+     * @param name                The name of the dog.
+     * @param x                   The initial X position of the dog.
+     * @param y                   The initial Y position of the dog.
+     * @param health              The initial health of the dog.
+     * @param damage              The damage dealt by the dog.
+     * @param speed               The movement speed of the dog.
+     * @param zoneX               The X position of the dog's patrol zone.
+     * @param zoneY               The Y position of the dog's patrol zone.
+     * @param zoneWidth           The width of the dog's patrol zone.
+     * @param zoneHeight          The height of the dog's patrol zone.
+     * @param detectionDistance   The distance at which the dog can detect the player.
+     * @param detectionRadius     The angular radius within which the dog can detect the player.
+     * @param detectionDirection  The direction of detection for the dog, expressed in degrees.
+     */
+    public Dog(String name, float x, float y, int health, int damage, float speed, float zoneX, float zoneY, float zoneWidth, float zoneHeight,  float detectionDistance, float detectionRadius, float detectionDirection) {
+<span class="nc" id="L47">        super(name, x, y, health, damage, speed, zoneX, zoneY, zoneWidth, zoneHeight, detectionDistance, detectionRadius, detectionDirection);</span>
+<span class="nc" id="L48">        this.alertSound = Gdx.audio.newSound(Gdx.files.internal(GameConfigManager.DOG_ALERT_SOUND));</span>
+<span class="nc" id="L49">        this.facingRight = true;</span>
+<span class="nc" id="L50">    }</span>
+
+    /**
+     * Updates the dog's state every frame of the game.
+     * This method checks if the player is detected. If the player is detected, the dog triggers the alert
+     * and starts pursuing the player. If the player is not detected, the dog continues to patrol its zone.
+     *
+     * @param player The player to detect and pursue.
+     * @param map    The game map used to check for collisions.
+     * @param delta  The time elapsed since the last update (in seconds).
+     */
+    @Override
+    public void update(Player player, TiledMap map, float delta) {
+<span class="nc" id="L63">        stateTime += delta;</span>
+        TextureRegion currentFrame;
+
+        // Update the dog's animation based on movement state
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        if (facingRight || !facingRight) {</span>
+<span class="nc" id="L68">            currentFrame = runAnimation.getKeyFrame(stateTime, true);</span>
+        } else {
+<span class="nc" id="L70">            currentFrame = idleAnimation.getKeyFrame(stateTime, true);</span>
+        }
+
+<span class="nc" id="L73">        sprite.setRegion(currentFrame);</span>
+
+        // Calculate positions of the player and the dog
+<span class="nc" id="L76">        Vector2 playerPosition = new Vector2(player.getX() + player.getSprite().getHeight()/2, player.getY() + player.getSprite().getHeight()/2);</span>
+<span class="nc" id="L77">        Vector2 enemyPosition = new Vector2(this.x, this.y);</span>
+
+        // Check if the player is within the dog's detection zone
+<span class="nc" id="L80">        boolean playerDetected = detectPlayer(enemyPosition, playerPosition);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (playerDetected) {</span>
+<span class="nc" id="L82">            System.out.println(getName() + &quot; detect &quot; + player.getName());</span>
+<span class="nc" id="L83">            DetectionManager.getInstance().updateDetection(true);</span>
+<span class="nc" id="L84">            triggerAlert();</span>
+        } else {
+<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (!DetectionManager.getInstance().isPlayerDetected()) {</span>
+<span class="nc" id="L87">                resetAlert();</span>
+<span class="nc" id="L88">                move(delta, map);</span>
+            }
+        }
+
+        // Pursue the player if detected
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (DetectionManager.getInstance().isPlayerDetected()) {</span>
+<span class="nc" id="L94">            pursuitPlayer(player, map, delta);</span>
+        }
+<span class="nc" id="L96">    }</span>
+
+    /**
+     * Moves the dog within its patrol zone.
+     * The dog moves horizontally within the zone defined by {@code zoneX}, {@code zoneY},
+     * {@code zoneWidth}, and {@code zoneHeight}. The dog changes direction when it reaches the edge of the zone.
+     *
+     * @param delta The time elapsed since the last update (in seconds).
+     * @param map   The game map used to check for collisions during movement.
+     */
+    @Override
+    public void move(float delta, TiledMap map) {
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        if (facingRight) {</span>
+<span class="nc" id="L110">            x += GameConfigManager.DOG_SPEED * delta;</span>
+<span class="nc" id="L111">            sprite.setFlip(false, false);</span>
+        } else {
+<span class="nc" id="L113">            x -= GameConfigManager.DOG_SPEED * delta;</span>
+<span class="nc" id="L114">            sprite.setFlip(true, false);</span>
+        }
+
+        // Ensure the dog stays within its patrol zone and reverses direction if necessary
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (x &lt; zoneX) {</span>
+<span class="nc" id="L119">            x = zoneX;</span>
+<span class="nc" id="L120">            facingRight = true;</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        } else if (x &gt; zoneX + zoneWidth - sprite.getWidth()) {</span>
+<span class="nc" id="L122">            x = zoneX + zoneWidth - sprite.getWidth();</span>
+<span class="nc" id="L123">            facingRight = false;</span>
+        }
+
+        // Keep the dog vertically centered within the patrol zone
+<span class="nc" id="L127">        y = zoneY + zoneHeight / 2 - sprite.getHeight() / 2;</span>
+
+<span class="nc" id="L129">        sprite.setPosition(x, y);</span>
+<span class="nc" id="L130">    }</span>
+
+    /**
+     * Triggers the alert sound when the player is detected by the dog.
+     * The alert sound will only play once per detection event.
+     */
+    @Override
+    public void triggerAlert() {
+<span class="nc" id="L138">        super.triggerAlert();</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (!alertTriggered) {</span>
+<span class="nc" id="L140">            alertSound.play();</span>
+<span class="nc" id="L141">            alertTriggered = true;</span>
+        }
+<span class="nc" id="L143">    }</span>
+
+    /**
+     * Resets the alert state, indicating that the alert has been lifted.
+     * This method is called when the player exits the detection zone or when the alert needs to be reset.
+     */
+    public void resetAlert() {
+<span class="nc" id="L150">        alertTriggered = false;</span>
+<span class="nc" id="L151">    }</span>
+
+
+    /**
+     * Releases the resources used by the dog, including the alert sound.
+     * This method is called when the dog is removed or when the application exits.
+     */
+    @Override
+    public void dispose() {
+<span class="nc" id="L160">        super.dispose();</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (alertSound != null) {</span>
+<span class="nc" id="L162">            alertSound.dispose();</span>
+        }
+<span class="nc" id="L164">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameConfigManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">GameConfigManager.java</span></div><h1>GameConfigManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+/**
+ * The Game Configuration Manager.
+ * This class contains all the constants and parameters necessary for configuring the game.
+ *
+ * These constants are used throughout the game to ensure consistent configuration and avoid duplication of values
+ * in the code. It also allows for easy modification of game settings without needing to change the source code in multiple places.
+ */
+<span class="nc" id="L10">public class GameConfigManager {</span>
+
+    /** The width of the game window. */
+    public static final int WINDOW_WIDTH = 1536;
+
+    /** The height of the game window. */
+    public static final int WINDOW_HEIGHT = 864;
+
+    /** Camera smoothing factor for smooth movement. */
+    public static final float CAMERA_SMOOTHING = 0.1f;
+
+    /** The sound played in the main menu. */
+    public static final String MENU_SOUND = &quot;sound/intro.mp3&quot;;
+
+    /** The sound played when an item is picked up. */
+    public static final String PICK_SOUND = &quot;sound/pick.mp3&quot;;
+
+    /** Background texture for the main menu. */
+    public static final String MENU_BACKGROUND_TEXTURE = &quot;menu/background_menu.png&quot;;
+
+    /** Background texture for the options menu. */
+    public static final String MENUOPTIONS_BACKGROUND_TEXTURE = &quot;menu/background_options.png&quot;;
+
+    /** Background texture shown when the game is over. */
+    public static final String GAMEOVER_BACKGROUND_TEXTURE = &quot;menu/background_gameover.png&quot;;
+
+    /** Background texture shown when the game progresses to the next level. */
+    public static final String NEXTLEVEL_BACKGROUND_TEXTURE = &quot;menu/background_nextlevel.png&quot;;
+
+    /** Background texture for top 10 scores. */
+    public static final String TOPSCORES_BACKGROUND_TEXTURE = &quot;menu/background_topscores.png&quot;;
+
+    /** Speed of the player (in pixels per second). */
+    public static final float PLAYER_SPEED = 200f;
+
+    /** Range of the player's attack. */
+    public static final float PLAYER_ATTACK_RANGE = 80f;
+
+    /** Texture representing the guard's idle state. */
+    public static final String GUARD_TEXTURE_IDLE = &quot;guard-idle.png&quot;;
+
+    /** Texture representing the guard's running state. */
+    public static final String GUARD_TEXTURE_RUNNING = &quot;guard-running.png&quot;;
+
+    /** Speed of the guard's movement. */
+    public static final float GUARD_SPEED = 40f;
+
+    /** Texture representing the dog's idle state. */
+    public static final String DOG_TEXTURE_IDLE = &quot;dog-idle.png&quot;;
+
+    /** Texture representing the dog's running state. */
+    public static final String DOG_TEXTURE_RUNNING = &quot;dog-running.png&quot;;
+
+    /** Speed of the dog's movement. */
+    public static final float DOG_SPEED = 40f;
+
+    /** Sound played when the dog is alerted. */
+    public static final String DOG_ALERT_SOUND = &quot;sound/dog.mp3&quot;;
+
+    /** Texture of the CCTV camera facing left. */
+    public static final String CCTV_TEXTURE_LEFT = &quot;cctv_left.png&quot;;
+
+    /** Texture of the CCTV camera facing right. */
+    public static final String CCTV_TEXTURE_RIGHT = &quot;cctv_right.png&quot;;
+
+    /** Sound played when the CCTV camera is triggered. */
+    public static final String CCTV_ALERT_SOUND = &quot;sound/alert.mp3&quot;;
+
+    /** Speed of the CCTV camera's movement. */
+    public static final float CCTV_SPEED = 0f;
+
+    /** Orientation of the CCTV camera (facing left). */
+    public static final float CCTV_SENS_LEFT = -100;
+
+    /** Orientation of the CCTV camera (facing right). */
+    public static final float CCTV_SENS_RIGHT = 10;
+
+    /** Texture of the tower guard facing right. */
+    public static final String TOWER_GUARD_TEXTURE_RIGHT = &quot;tower-guard-pointing-right.png&quot;;
+
+    /** Texture of the tower guard facing left. */
+    public static final String TOWER_GUARD_TEXTURE_LEFT = &quot;tower-guard-pointing-left.png&quot;;
+
+    /** Orientation of the tower guard's detection (facing left). */
+    public static final float TOWER_GUARD_SENS_LEFT = -180;
+
+    /** Orientation of the tower guard's detection (facing right). */
+    public static final float TOWER_GUARD_SENS_RIGHT = 120;
+
+    /** Texture of the &quot;gun&quot; weapon. */
+    public static final String GUN_TEXTURE = &quot;gun.png&quot;;
+
+    /** Sound played when the gun is fired. */
+    public static final String GUN_SOUND = &quot;sound/gun.mp3&quot;;
+
+    /** Texture of the &quot;grenade&quot; weapon. */
+    public static final String GRENADE_TEXTURE = &quot;grenade.png&quot;;
+
+    /** Texture of the &quot;knife&quot; weapon. */
+    public static final String KNIFE_TEXTURE = &quot;knife.png&quot;;
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

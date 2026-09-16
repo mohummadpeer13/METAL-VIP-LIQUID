@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeaponManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">WeaponManager.java</span></div><h1>WeaponManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Array;
+import com.metal.kit.vapor.characters.Grenade;
+import com.metal.kit.vapor.characters.Gun;
+import com.metal.kit.vapor.characters.Weapon;
+
+
+/**
+ * The weapon manager for the game.
+ * This class is responsible for creating, managing, and retrieving the weapons available in the game.
+ * It allows for the creation of a list of weapons, retrieval of that list, and freeing the associated resources when they are no longer needed.
+ */
+public class WeaponManager {
+
+    /**
+     * List of weapons in the game.
+     * This list is used to store all active weapons.
+     */
+    private Array&lt;Weapon&gt; weapons;
+
+    /**
+     * Constructor for the WeaponManager class.
+     * Initializes the weapon list and generates the default weapons by calling the `createWeapon()` method.
+     */
+<span class="nc" id="L27">    public WeaponManager() {</span>
+<span class="nc" id="L28">        this.weapons = new Array&lt;&gt;();</span>
+<span class="nc" id="L29">        createWeapon();</span>
+<span class="nc" id="L30">    }</span>
+
+    /**
+     * Creates the weapons to be placed in the game.
+     * This method creates different weapons (such as guns and grenades) and adds them to the list of available weapons.
+     */
+    private void createWeapon() {
+<span class="nc" id="L37">        weapons.add(new Gun(&quot;Gun1&quot;, new Texture(GameConfigManager.GUN_TEXTURE), 350, 500, 10, GameConfigManager.CCTV_ALERT_SOUND));</span>
+<span class="nc" id="L38">        weapons.add(new Gun(&quot;Gun2&quot;, new Texture(GameConfigManager.GUN_TEXTURE), 1000, 1500, 10, GameConfigManager.CCTV_ALERT_SOUND));</span>
+<span class="nc" id="L39">        weapons.add(new Gun(&quot;Gun3&quot;, new Texture(GameConfigManager.GUN_TEXTURE), 1500, 300, 10, GameConfigManager.CCTV_ALERT_SOUND));</span>
+
+<span class="nc" id="L41">        weapons.add(new Grenade(&quot;Grenade1&quot;, new Texture(GameConfigManager.GRENADE_TEXTURE), 1100, 850, 10, GameConfigManager.CCTV_ALERT_SOUND));</span>
+<span class="nc" id="L42">        weapons.add(new Grenade(&quot;Grenade2&quot;, new Texture(GameConfigManager.GRENADE_TEXTURE), 1400, 1400, 10, GameConfigManager.CCTV_ALERT_SOUND));</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Retrieves the list of available weapons in the game.
+     * This method returns all the weapons created and placed on the map.
+     *
+     * @return The list of available weapons as an `Array` of `Weapon` objects.
+     */
+    public Array&lt;Weapon&gt; getWeapons() {
+<span class="nc" id="L52">        return weapons;</span>
+    }
+
+
+    /**
+     * Frees the resources associated with the weapons when the manager is no longer needed.
+     * This method calls the `dispose()` method for each weapon and clears the weapon list.
+     */
+    public void dispose() {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        for (Weapon weapon : weapons) {</span>
+<span class="nc" id="L62">            weapon.dispose();</span>
+<span class="nc" id="L63">        }</span>
+<span class="nc" id="L64">        weapons.clear();</span>
+<span class="nc" id="L65">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

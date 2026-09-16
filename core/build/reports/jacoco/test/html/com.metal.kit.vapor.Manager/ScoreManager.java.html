@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScoreManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.metal.kit.vapor.Manager</a> &gt; <span class="el_source">ScoreManager.java</span></div><h1>ScoreManager.java</h1><pre class="source lang-java linenums">package com.metal.kit.vapor.Manager;
+
+import com.badlogic.gdx.Gdx;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.metal.kit.vapor.characters.Score;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * The game score manager.
+ * This class handles saving, loading, and managing player scores in a local JSON file.
+ * It provides functionalities to save a score, load the score list, and get the highest score.
+ */
+public class ScoreManager {
+    // The JSON file where the scores are saved
+    private File scoreFile;
+
+    // Gson instance for JSON serialization and deserialization
+    private Gson gson;
+
+    // List of scores
+    private List&lt;Score&gt; scores;
+
+    /**
+     * Constructor for the ScoreManager class.
+     * Initializes the score file, Gson instance, and loads existing scores from the file.
+     */
+<span class="nc" id="L35">    public ScoreManager() {</span>
+<span class="nc" id="L36">        scoreFile = new File(Gdx.files.local(&quot;scores.json&quot;).path());</span>
+<span class="nc" id="L37">        gson = new Gson();</span>
+<span class="nc" id="L38">        scores = loadScores();</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Saves a new score to the JSON file.
+     * The score will be added to the list of existing scores, and the complete list will then be saved back to the file.
+     *
+     * @param playerName The name of the player whose score is to be saved.
+     * @param score      The score of the player to be saved.
+     */
+    public void saveScore(String playerName, int score) {
+<span class="nc" id="L49">        scores.add(new Score(playerName, score));</span>
+
+<span class="nc" id="L51">        try (FileWriter writer = new FileWriter(scoreFile)) {</span>
+<span class="nc" id="L52">            gson.toJson(scores, writer);</span>
+<span class="nc" id="L53">        } catch (IOException e) {</span>
+<span class="nc" id="L54">            e.printStackTrace();</span>
+<span class="nc" id="L55">        }</span>
+<span class="nc" id="L56">    }</span>
+
+    /**
+     * Loads the scores from the JSON file.
+     * If the file does not exist or cannot be read, an empty list is returned.
+     *
+     * @return The list of scores loaded from the file, or an empty list if the file is missing or corrupted.
+     */
+    public List&lt;Score&gt; loadScores() {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (scoreFile.exists()) {</span>
+<span class="nc" id="L66">            try (FileReader reader = new FileReader(scoreFile)) {</span>
+<span class="nc" id="L67">                Type listType = new TypeToken&lt;ArrayList&lt;Score&gt;&gt;() {}.getType();</span>
+<span class="nc" id="L68">                return gson.fromJson(reader, listType);</span>
+<span class="nc" id="L69">            } catch (IOException e) {</span>
+<span class="nc" id="L70">                e.printStackTrace();</span>
+            }
+        }
+<span class="nc" id="L73">        return new ArrayList&lt;&gt;();</span>
+    }
+
+    /**
+     * Gets the best score from the saved scores.
+     * If multiple players have the same highest score, the first encountered one will be returned.
+     *
+     * @return The best score recorded, or null if the list of scores is empty.
+     */
+    public String getBestScore() {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (scores.isEmpty()) {</span>
+<span class="nc" id="L84">            return &quot;No scores available.&quot;;</span>
+        }
+
+        // Highest score
+<span class="nc" id="L88">        int highestScore = Integer.MIN_VALUE;</span>
+<span class="nc" id="L89">        List&lt;String&gt; topPlayers = new ArrayList&lt;&gt;();</span>
+
+        // Iterate through all scores and find the highest
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        for (Score score : scores) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (score.score &gt; highestScore) {</span>
+<span class="nc" id="L94">                highestScore = score.score;</span>
+<span class="nc" id="L95">                topPlayers.clear();</span>
+<span class="nc" id="L96">                topPlayers.add(score.playerName);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            } else if (score.score == highestScore) {</span>
+                // If the score is equal to the highest, add the player to the list
+<span class="nc" id="L99">                topPlayers.add(score.playerName);</span>
+            }
+<span class="nc" id="L101">        }</span>
+
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (topPlayers.size() &gt; 1) {</span>
+<span class="nc" id="L104">            return &quot;Same score between &quot; + String.join(&quot;, &quot;, topPlayers) + &quot; with a score of &quot; + highestScore;</span>
+        } else {
+<span class="nc" id="L106">            return topPlayers.get(0) + &quot; has the highest score: &quot; + highestScore;</span>
+        }
+    }
+
+    /**
+     * Gets the list of top scores (10).
+     * This method can be used to display the top N scores in the UI.
+     *
+     * @return The list of top scores.
+     */
+    public List&lt;Score&gt; getTopScores() {
+<span class="nc" id="L117">        List&lt;Score&gt; scores = loadScores();</span>
+<span class="nc" id="L118">        scores.sort(Comparator.comparingInt(Score::getScore).reversed());</span>
+
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (scores.size() &gt; 10) {</span>
+<span class="nc" id="L121">            scores = scores.subList(0, 10);</span>
+        }
+
+<span class="nc" id="L124">        return scores;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
